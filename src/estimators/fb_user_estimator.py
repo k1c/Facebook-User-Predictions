@@ -1,3 +1,5 @@
+import os
+import pickle
 from typing import List
 
 from data.fb_user_features import FBUserFeatures
@@ -11,10 +13,12 @@ from estimators.base.personality_estimator import PersonalityEstimator
 class FBUserEstimator:
 
     def __init__(self,
+                 model_id: str,
                  age_estimator: AgeEstimator,
                  gender_estimator: GenderEstimator,
                  personality_estimator: PersonalityEstimator):
 
+        self.model_id = model_id
         self.age_estimator = age_estimator
         self.gender_estimator = gender_estimator
         self.personality_estimator = personality_estimator
@@ -41,8 +45,21 @@ class FBUserEstimator:
         ]
 
     # Model persistence
-    def save(self):
-        pass
+    def save(self, save_path: str):
+        file_name = os.path.join(
+            save_path,
+            self.model_id
+        )
+        with open(file_name, "wb") as f:
+            pickle.dump(self, f)
 
-    def load(self):
-        pass
+    @staticmethod
+    def load(load_path: str, model_id: str) -> 'FBUserEstimator':
+        file_name = os.path.join(
+            load_path,
+            model_id
+        )
+        with open(file_name, "rb") as f:
+            model = pickle.load(f)
+
+        return model

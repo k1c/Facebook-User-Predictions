@@ -71,7 +71,7 @@ def categorize_age(age: str) -> str:
         return "50-xx"
 
 
-def read_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLabels]]:
+def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLabels]]:
     """
     The main entry point to read all the data. It goes through the `Profile/Profile.csv` file, gets the `userid`,
     and collects the associated status messages, likes and image for the user and encapsulates them in the
@@ -122,3 +122,34 @@ def read_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLabels]]
         )
 
     return features, labels
+
+
+def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
+    profile_file_path = os.path.join(
+        data_path,
+        PROFILE_DIR,
+        PROFILE_FILE
+    )
+
+    profile_df = pd.read_csv(
+        profile_file_path,
+        converters={
+            AGE: categorize_age
+        }
+    )
+    likes = read_likes(data_path)
+    features, labels = list(), list()
+
+    for _, row in profile_df.iterrows():
+        user_id = row[USER_ID]
+
+        features.append(
+            FBUserFeatures.from_data(
+                user_id=user_id,
+                likes=likes[user_id],
+                statuses=read_statuses(data_path, user_id),
+                image=read_image(data_path, user_id)
+            )
+        )
+    return features
+
