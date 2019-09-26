@@ -6,7 +6,7 @@ import pandas as pd
 
 from constants.column_names import USER_ID, AGE, GENDER, OPENNESS, CONSCIENTIOUSNESS, EXTROVERSION, AGREEABLENESS, \
     NEUROTICISM, LIKE_ID
-from constants.directory_names import PROFILE_DIR_NAME, STATUS_DIR_NAME, LIKES_DIR_NAME
+from constants.directory_names import PROFILE_DIR, LIKES_DIR, RELATION_DIR
 from constants.file_names import PROFILE_FILE, RELATIONS_FILE
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
@@ -23,7 +23,7 @@ def read_statuses(data_path: str, user_id: str) -> List[str]:
     """
     status_file_path = os.path.join(
         data_path,
-        STATUS_DIR_NAME,
+        LIKES_DIR,
         "{}.txt".format(user_id)
     )
 
@@ -48,13 +48,13 @@ def read_likes(data_path: str) -> DefaultDict[str, List[int]]:
     """
     likes_file_path = os.path.join(
         data_path,
-        LIKES_DIR_NAME,
+        RELATION_DIR,
         RELATIONS_FILE
     )
 
     like_df = pd.read_csv(likes_file_path)
     user_likes: DefaultDict[str, List[int]] = defaultdict(list)
-    for idx, row in like_df.iterrows():
+    for _, row in like_df.iterrows():
         user_likes[row[USER_ID]].append(row[LIKE_ID])
     return user_likes
 
@@ -81,7 +81,7 @@ def read_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLabels]]
     """
     profile_file_path = os.path.join(
         data_path,
-        PROFILE_DIR_NAME,
+        PROFILE_DIR,
         PROFILE_FILE
     )
 
