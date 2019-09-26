@@ -26,16 +26,16 @@ class FBUserEstimator:
 
     def predict(self, features: List[FBUserFeatures]) -> List[FBUserLabels]:
 
-        ages: List[str] = self.age_estimator.predict(features)
-        genders: List[int] = self.gender_estimator.predict(features)
-        personality_traits: List[PersonalityTraits] = self.personality_estimator.predict(features)
+        age_predictions: List[str] = self.age_estimator.predict(features)
+        gender_predictions: List[int] = self.gender_estimator.predict(features)
+        personality_predictions: List[PersonalityTraits] = self.personality_estimator.predict(features)
 
         return [
-            FBUserLabels.from_predictions(
+            FBUserLabels.from_data(
                 user_id=features[idx].user_id,
-                age=ages[idx],
-                gender=genders[idx],
-                personality_traits=personality_traits[idx]
+                age=age_predictions[idx],
+                gender=gender_predictions[idx],
+                personality_traits=personality_predictions[idx]
             )
             for idx in range(len(features))
         ]

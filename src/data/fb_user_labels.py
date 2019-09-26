@@ -14,11 +14,11 @@ class FBUserLabels:
         self.personality_traits = personality_traits
 
     @classmethod
-    def from_predictions(cls,
-                         user_id: str,
-                         age: str,
-                         gender: int,
-                         personality_traits: PersonalityTraits) -> 'FBUserLabels':
+    def from_data(cls,
+                  user_id: str,
+                  age: str,
+                  gender: int,
+                  personality_traits: PersonalityTraits) -> 'FBUserLabels':
         return cls(
             user_id=user_id,
             age=age,
@@ -40,3 +40,11 @@ class FBUserLabels:
         />
         """
         pass
+
+    def __repr__(self):
+        return """
+        user_id: {} \n
+        age: {} \n
+        gender: {} \n
+        personality_traits: {}
+        """.format(self.user_id, self.age, self.gender, self.personality_traits)

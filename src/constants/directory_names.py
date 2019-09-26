@@ -1,4 +1,4 @@
-image_dir_name = "Images"
-status_dir_name = "Text"
-likes_dir_name = "Relation"
-profile_dir_name = "Profile"
+IMAGE_DIR_NAME = "Image"
+STATUS_DIR_NAME = "Text"
+LIKES_DIR_NAME = "Relation"
+PROFILE_DIR_NAME = "Profile"
