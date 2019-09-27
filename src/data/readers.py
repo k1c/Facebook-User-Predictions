@@ -27,7 +27,7 @@ def read_statuses(data_path: str, user_id: str) -> List[str]:
         "{}.txt".format(user_id)
     )
 
-    with open(status_file_path) as f:
+    with open(status_file_path, "r", errors='replace') as f:
         content = f.readlines()
 
     return [
@@ -131,12 +131,7 @@ def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
         PROFILE_FILE
     )
 
-    profile_df = pd.read_csv(
-        profile_file_path,
-        converters={
-            AGE: categorize_age
-        }
-    )
+    profile_df = pd.read_csv(profile_file_path)
     likes = read_likes(data_path)
     features, labels = list(), list()
 

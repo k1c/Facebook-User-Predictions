@@ -32,7 +32,8 @@ class FBUserLabels:
     def save_obj(self, save_path: str):
         """
         Serializes the object data and stores it in the following format in a file save_path/user_id.xml:
-        <userid="8157f43c71fbf53f4580fd3fc808bd29"
+        <user
+        id="8157f43c71fbf53f4580fd3fc808bd29"
         age_group="xx-24"
         gender="female"
         extrovert="2.7"
@@ -44,7 +45,7 @@ class FBUserLabels:
         """
         # We could use something fancier like an xml serializer, but this is a pretty simple XML blob.
         # I think just string formatting should be fine.
-        pred_values = {
+        predicted_values = {
             'userid': self.user_id,
             'age_group': self.age,
             'gender': "female" if self.gender == 1 else "male",
@@ -65,7 +66,7 @@ class FBUserLabels:
         conscientious="{conscientious}"
         open="{open}"
         />
-        """.format(**pred_values).strip()
+        """.format(**predicted_values).strip()
 
         save_file_path = os.path.join(
             save_path,

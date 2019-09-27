@@ -9,10 +9,7 @@ from estimators.fb_user_estimator import FBUserEstimator
 
 def main(arguments: argparse.Namespace):
 
-    fb_user_estimator = FBUserEstimator.load(
-        load_path=".",
-        model_id="44ea155925e04d18a9983b10202e7342"
-    )
+    fb_user_estimator = FBUserEstimator.load(arguments.model_path)
 
     features = read_prediction_data(arguments.data_path)
     predictions = fb_user_estimator.predict(features)
@@ -26,5 +23,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--data_path", type=str)
     parser.add_argument("-o", "--save_path", type=str)
+    parser.add_argument("-m", "--model_path", type=str)
     args = parser.parse_args()
     main(args)
