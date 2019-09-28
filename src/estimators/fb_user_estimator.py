@@ -48,18 +48,14 @@ class FBUserEstimator:
     def save(self, save_path: str):
         file_name = os.path.join(
             save_path,
-            self.model_id
+            "fb_user_estimator_{}".format(self.model_id)
         )
         with open(file_name, "wb") as f:
             pickle.dump(self, f)
 
     @staticmethod
-    def load(load_path: str, model_id: str) -> 'FBUserEstimator':
-        file_name = os.path.join(
-            load_path,
-            model_id
-        )
-        with open(file_name, "rb") as f:
+    def load(model_path: str) -> 'FBUserEstimator':
+        with open(model_path, "rb") as f:
             model = pickle.load(f)
 
         return model
