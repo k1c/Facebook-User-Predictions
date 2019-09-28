@@ -8,17 +8,18 @@ from data.personality_traits import PersonalityTraits
 from estimators.base.age_estimator import AgeEstimator
 from estimators.base.gender_estimator import GenderEstimator
 from estimators.base.personality_estimator import PersonalityEstimator
+from utils import create_directories_to_file
 
 
 class FBUserEstimator:
 
     def __init__(self,
-                 model_id: str,
+                 model_file_name: str,
                  age_estimator: AgeEstimator,
                  gender_estimator: GenderEstimator,
                  personality_estimator: PersonalityEstimator):
 
-        self.model_id = model_id
+        self.model_file_name = model_file_name
         self.age_estimator = age_estimator
         self.gender_estimator = gender_estimator
         self.personality_estimator = personality_estimator
@@ -45,17 +46,20 @@ class FBUserEstimator:
         ]
 
     # Model persistence
-    def save(self, save_path: str):
-        file_name = os.path.join(
+    def save(self, save_path: str) -> str:
+        model_path = os.path.join(
             save_path,
-            "fb_user_estimator_{}".format(self.model_id)
+            self.model_file_name
         )
-        with open(file_name, "wb") as f:
-            pickle.dump(self, f)
+        create_directories_to_file(model_path)
+        with open(model_path, "wb") as file_handler:
+            pickle.dump(self, file_handler)
+
+        return model_path
 
     @staticmethod
     def load(model_path: str) -> 'FBUserEstimator':
-        with open(model_path, "rb") as f:
-            model = pickle.load(f)
+        with open(model_path, "rb") as model_file:
+            model = pickle.load(model_file)
 
         return model
