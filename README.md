@@ -10,9 +10,10 @@ cd Facebook-User-Predictions
 python src/train.py --data_path="../Train" --age_estimator=baseline --gender_estimator=baseline --personality_estimator=baseline
 ```
 
-* Test the saved model.
+* Sadly we need to hardcode the model path inside `ift6768.py`. Open up `ift6758.py` and update the `MODEL_PATH` variable with the full path of the trained model that is saved in the above step.
+Now we can test.
 ```python
-python ift6758.py -i [full_path_to_trained_model] -o [full_path_to_save_dir]
+python ift6758.py -i "../Public_Test" -o [full_path_to_save_dir]
 ```
 
 
