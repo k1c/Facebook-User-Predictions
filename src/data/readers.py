@@ -27,7 +27,7 @@ def read_statuses(data_path: str, user_id: str) -> List[str]:
         "{}.txt".format(user_id)
     )
 
-    with open(status_file_path, "r", errors='replace') as f:
+    with open(status_file_path, "r", errors="replace") as f:
         content = f.readlines()
 
     return [
@@ -147,4 +147,3 @@ def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
             )
         )
     return features
-
