@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 from data.personality_traits import PersonalityTraits
 from typing import List
@@ -67,6 +68,9 @@ class FBUserLabels:
         open="{open}"
         />
         """.format(**predicted_values).strip()
+
+        # Create output folder if it doesn't exist.
+        pathlib.Path(save_path).mkdir(parents=True, exist_ok=True)
 
         save_file_path = os.path.join(
             save_path,
