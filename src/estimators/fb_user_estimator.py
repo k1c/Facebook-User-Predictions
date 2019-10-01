@@ -1,6 +1,7 @@
 import os
 import pickle
 from typing import List
+import pathlib
 
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
@@ -8,6 +9,7 @@ from data.personality_traits import PersonalityTraits
 from estimators.base.age_estimator import AgeEstimator
 from estimators.base.gender_estimator import GenderEstimator
 from estimators.base.personality_estimator import PersonalityEstimator
+from utils import get_current_timestamp
 
 
 class FBUserEstimator:
@@ -45,17 +47,21 @@ class FBUserEstimator:
         ]
 
     # Model persistence
-    def save(self, save_path: str):
-        file_name = os.path.join(
+    def save(self, save_path: str) -> str:
+        model_file_name = "{}_{}.pkl".format(self.model_id, get_current_timestamp())
+        model_path = os.path.join(
             save_path,
-            "fb_user_estimator_{}".format(self.model_id)
+            model_file_name
         )
-        with open(file_name, "wb") as f:
-            pickle.dump(self, f)
+        pathlib.Path(save_path).mkdir(parents=True, exist_ok=True)
+        with open(model_path, "wb") as file_handler:
+            pickle.dump(self, file_handler)
+
+        return model_path
 
     @staticmethod
     def load(model_path: str) -> 'FBUserEstimator':
-        with open(model_path, "rb") as f:
-            model = pickle.load(f)
+        with open(model_path, "rb") as model_file:
+            model = pickle.load(model_file)
 
         return model

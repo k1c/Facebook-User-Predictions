@@ -1,8 +1,9 @@
 import os
 import pathlib
 
-from data.personality_traits import PersonalityTraits
 from typing import List
+
+from data.personality_traits import PersonalityTraits
 
 
 class FBUserLabels:
@@ -30,7 +31,7 @@ class FBUserLabels:
             personality_traits=personality_traits
         )
 
-    def save_obj(self, save_path: str):
+    def save_obj(self, save_path: str) -> None:
         """
         Serializes the object data and stores it in the following format in a file save_path/user_id.xml:
         <user
@@ -69,9 +70,6 @@ class FBUserLabels:
         />
         """.format(**predicted_values).strip()
 
-        # Create output folder if it doesn't exist.
-        pathlib.Path(save_path).mkdir(parents=True, exist_ok=True)
-
         save_file_path = os.path.join(
             save_path,
             "{}.xml".format(self.user_id)
@@ -80,9 +78,11 @@ class FBUserLabels:
             f.write(xml_blob)
 
     @staticmethod
-    def save(predictions: List['FBUserLabels'], save_path: str) -> None:
+    def save(predictions: List['FBUserLabels'], save_path: str) -> str:
+        pathlib.Path(save_path).mkdir(parents=True, exist_ok=True)
         for prediction in predictions:
             prediction.save_obj(save_path)
+        return save_path
 
     def __repr__(self):
         return """
