@@ -1,9 +1,9 @@
 import os
+import pathlib
 
 from typing import List
 
 from data.personality_traits import PersonalityTraits
-from utils import create_directories_to_file
 
 
 class FBUserLabels:
@@ -79,7 +79,7 @@ class FBUserLabels:
 
     @staticmethod
     def save(predictions: List['FBUserLabels'], save_path: str) -> str:
-        create_directories_to_file(save_path)
+        pathlib.Path(save_path).mkdir(parents=True, exist_ok=True)
         for prediction in predictions:
             prediction.save_obj(save_path)
         return save_path

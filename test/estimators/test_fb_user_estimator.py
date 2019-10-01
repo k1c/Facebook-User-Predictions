@@ -14,6 +14,7 @@ class TestFBUserEstimator(unittest.TestCase):
 
     def test_prediction(self):
         fb_user_estimator = FBUserEstimator(
+            model_id="foobar",
             age_estimator=BaselineAgeEstimator(),
             gender_estimator=BaselineGenderEstimator(),
             personality_estimator=BaselinePersonalityEstimator()

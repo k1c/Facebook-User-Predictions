@@ -5,7 +5,7 @@ from estimators.age.baseline_age_estimator import BaselineAgeEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
-from utils import get_current_timestamp
+from utils import get_random_id
 
 age_estimators = {
     'baseline': BaselineAgeEstimator
@@ -26,7 +26,7 @@ def main(arguments: argparse.Namespace):
 
     print("Initialising estimators ...")
     fb_user_estimator = FBUserEstimator(
-        model_file_name="{}.pkl".format(get_current_timestamp()),
+        model_file_id=get_random_id(),
         age_estimator=age_estimators.get(arguments.age_estimator)(),
         gender_estimator=gender_estimators.get(arguments.gender_estimator)(),
         personality_estimator=personality_estimators.get(arguments.personality_estimator)()
