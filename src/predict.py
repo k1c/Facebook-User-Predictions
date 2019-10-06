@@ -10,6 +10,7 @@ from utils import get_current_timestamp
 
 
 def main(arguments: argparse.Namespace):
+    print("")
     print("Loading model from '{}' ...".format(arguments.model_path))
     fb_user_estimator = FBUserEstimator.load(arguments.model_path)
     print("Loading test data from '{}' ...".format(arguments.input_path))
