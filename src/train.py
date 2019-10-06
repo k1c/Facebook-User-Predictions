@@ -21,6 +21,7 @@ personality_estimators = {
 
 
 def main(arguments: argparse.Namespace):
+    print("")
     print("Loading training data from '{}' ...".format(arguments.data_path))
     features, labels = read_train_data(data_path=arguments.data_path)
 
