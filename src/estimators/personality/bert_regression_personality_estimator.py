@@ -143,11 +143,13 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
                     running_loss = 0.0
 
         # save linear layer (learned weights)
-        self.model_save(model_path, self.regressor, optimizer)
+        self.model_save(MODEL_PATH, self.regressor, optimizer)
 
     def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
 
         model, optimizer = self.model_load(MODEL_PATH)
+
+
 
         #TODO: do prediction (below is just a placeholder for now)
 
