@@ -34,7 +34,6 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
         self.regressor = torch.nn.Linear(768, 5) #bert embedding size x number of regressions
         self.optimizer = torch.optim.Adam(self.regressor.parameters(), lr=LEARNING_RATE)
-        self.predictions: np.array = None
 
     def get_statuses_with_personality_labels(self, features, labels):
         # batch-size X number of personalities bs X 5
