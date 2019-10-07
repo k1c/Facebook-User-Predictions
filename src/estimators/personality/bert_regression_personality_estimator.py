@@ -81,7 +81,7 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
         statuses, labels = zip(*dataset)
 
         #cast from tuple to list
-        statuses = list(statuses)
+        statuses = list(statuses) #size of status is number of users * len(statuses) for each user (if each user has 2 statuses then its 100)
         labels = list(labels)
 
         assert len(statuses) == len(labels), "There should be an equal amount of statuses and labels (each status has one label)"
@@ -99,8 +99,9 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
         # right now, using bert as a feature extractor and learning at linear layer level
         # if we want to fine-tune BERT, need to put the encoding parameters + regressor parameters in a list and send it to optimizer
 
+        self.encoding.train()
+
         for epoch in range(NUM_TRAIN_EPOCHS):
-            self.encoding.train()
             print("Running Training \n")
             running_loss = 0.0
             for batch_idx in range(num_batches):
@@ -135,16 +136,39 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
 
     def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
 
-        #TODO: do prediction (below is just a placeholder for now)
+        statuses = list()
+        for feature in features:
+            statuses.append(feature.statuses)
 
+        user_input_ids = list() #list of torch tensors
+        for row in statuses:
+            input_ids = list()
+            for status in row:
+                input_ids.append(torch.tensor([self.tokenizer.encode(status, add_special_tokens=True)]))
+            user_input_ids.append(input_ids)
+
+        predictions = list()
+        with torch.no_grad():
+            self.encoding.eval()
+            for input_ids in user_input_ids: #for list of statuses for each user
+                zero_pad_input_ids_user = self.get_zero_pad(input_ids,MAX_SEQ_LENGTH)
+                attention_mask = self.get_attention_mask(zero_pad_input_ids_user)
+
+                #forward
+                outputs = self.encoding(input_ids=zero_pad_input_ids_user, attention_mask=attention_mask) # outputs is a tuple
+                last_hidden_states = outputs[0]
+                sent_emb = last_hidden_states.mean(1) # (status_list_length, hidden_size)
+                y_hat = self.regressor(sent_emb)
+                user_prediction = y_hat.mean(0) # status_list_length X 5 therefore need to average over axis 0, shape 1X5
+                predictions.append(user_prediction)
 
         return [
             PersonalityTraits(
-                openness=self.predictions[0],
-                conscientiousness=self.predictions[1],
-                extroversion=self.predictions[2],
-                agreeableness=self.predictions[3],
-                neuroticism=self.predictions[4]
+                openness=prediction[0].item(),
+                conscientiousness=prediction[1].item(),
+                extroversion=prediction[2].item(),
+                agreeableness=prediction[3].item(),
+                neuroticism=prediction[4].item()
             )
-            for _ in range(len(features))
+            for prediction in predictions
         ]
