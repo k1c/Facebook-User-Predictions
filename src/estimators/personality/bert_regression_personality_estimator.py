@@ -12,6 +12,8 @@ from transformers import BertModel, BertTokenizer
 import math
 from random import shuffle
 
+MODEL_PATH = "./estimators/personality/model/regressor/regressor.pt"
+
 class RMSELoss(nn.Module):
     def __init__(self, eps=1e-6):
         super().__init__()
@@ -31,16 +33,16 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
 
     def get_statuses_with_personality_labels(self, features, labels):
         # batch-size X number of personalities bs X 5
-        personality_traits = []
+        personality_traits = list()
         for label in labels:
             personality_traits.append(label.personality_traits.as_list())
 
         # batch-size X number of statuses bs X 2
-        statuses = []
+        statuses = list()
         for feature in features:
             statuses.append(feature.statuses)
 
-        dataset = []
+        dataset = list()
         for i, row in enumerate(statuses):
             for status in row:
                 dataset.append((status, personality_traits[i]))
@@ -75,8 +77,6 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
 
     def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]) -> None:
 
-        model_path = "./estimators/personality/model/regressor/regressor.pt"
-
         dataset = self.get_statuses_with_personality_labels(features, labels)
 
         #shuffle the dataset
@@ -92,7 +92,7 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
 
         labels = torch.tensor(labels)
 
-        input_ids = [] #list of torch tensors
+        input_ids = list() #list of torch tensors
         for status in statuses:
             input_ids.append(torch.tensor([self.tokenizer.encode(status, add_special_tokens=True)]))
 
@@ -146,6 +146,8 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
         self.model_save(model_path, self.regressor, optimizer)
 
     def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
+
+        model, optimizer = self.model_load(MODEL_PATH)
 
         #TODO: do prediction (below is just a placeholder for now)
 
