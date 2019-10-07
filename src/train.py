@@ -5,6 +5,8 @@ from estimators.age.baseline_age_estimator import BaselineAgeEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
+from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
+
 from utils import get_random_id
 
 age_estimators = {
@@ -16,7 +18,8 @@ gender_estimators = {
 }
 
 personality_estimators = {
-    'baseline': BaselinePersonalityEstimator
+    'baseline': BaselinePersonalityEstimator,
+    'bert_regression': BertRegressionPersonalityEstimator
 }
 
 
