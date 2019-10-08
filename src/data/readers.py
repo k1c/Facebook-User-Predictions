@@ -9,7 +9,7 @@ from constants.column_names import USER_ID, AGE, GENDER, OPENNESS, CONSCIENTIOUS
     NEUROTICISM, LIKE_ID
 from constants.directory_names import PROFILE_DIR, LIKES_DIR, RELATION_DIR, IMAGE_DIR
 from constants.file_names import PROFILE_FILE, RELATIONS_FILE
-from utils import detecting_faces, expand, crop_image, resize_image
+from image_utils import detecting_faces, expand, crop_image, resize_image
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
 from data.personality_traits import PersonalityTraits
