@@ -1,5 +1,6 @@
 import pathlib
 import random
+import shutil
 import uuid
 from typing import List
 
@@ -51,7 +52,17 @@ def generate_profiles_dir(user_ids: List[str]):
 
 
 def generate_images_dir(user_ids: List[str]):
-    pass
+    Profile = pd.read_csv("synthetic/Profile/Profile.csv")
+
+    for user_id in user_ids:
+        file_path = "synthetic/Image/{}.jpg".format(user_id)
+        print(user_id)
+        print(Profile[Profile["userid"] == user_id]["gender"].values)
+
+        if Profile[Profile["userid"] == user_id]["gender"].values == 0:
+            shutil.copy("datasets/mark.jpg", file_path)
+        else:
+            shutil.copy("datasets/priscilla.jpg", file_path)
 
 
 def generate_status_dir(user_ids: List[str]):
@@ -80,3 +91,4 @@ if __name__ == "__main__":
     generate_profiles_dir(user_ids)
     generate_relations_dir(user_ids, num_relations=3)
     generate_status_dir(user_ids)
+    generate_images_dir(user_ids)

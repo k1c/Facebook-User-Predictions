@@ -8,3 +8,4 @@ def get_current_timestamp():
 
 def get_random_id():
     return uuid.uuid4().hex
+

@@ -4,17 +4,20 @@ from data.readers import read_train_data
 from estimators.age.baseline_age_estimator import BaselineAgeEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
+from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
 from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
 
 from utils import get_random_id
+
 
 age_estimators = {
     'baseline': BaselineAgeEstimator
 }
 
 gender_estimators = {
-    'baseline': BaselineGenderEstimator
+    'baseline': BaselineGenderEstimator,
+    'cnn' : CnnGenderEstimator
 }
 
 personality_estimators = {
