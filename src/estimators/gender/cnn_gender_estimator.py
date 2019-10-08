@@ -42,12 +42,15 @@ class BasicNet(nn.Module):
         return out
 
 
-class CnnGenderEstimator(BasicNet):
+class CnnGenderEstimator(BasicNet, GenderEstimator):
 
-    def dataloader(self):
+    def __init__(self):
+        super().__init__()
+
+    def dataloader(self, features, labels):
         pass
 
-    def fit(self):
+    def fit(self, features, labels):
         pass
 
     def predict(self):
