@@ -21,5 +21,6 @@ class FBUserFeatures:
         return """
         user_id: {} \n
         likes: {} \n
-        statuses: {}
-        """.format(self.user_id, self.likes, self.statuses)
+        statuses: {} \n
+        image: {}
+        """.format(self.user_id, self.likes, self.statuses, self.image)
