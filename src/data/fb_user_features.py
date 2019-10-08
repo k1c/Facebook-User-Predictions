@@ -2,15 +2,14 @@ from typing import List
 
 
 class FBUserFeatures:
-    def __init__(self, user_id: str, likes: List[int], statuses: List[str], image: int):
+    def __init__(self, user_id: str, likes: List[int], statuses: List[str], image: List[float]):
         self.user_id = user_id
         self.likes = likes
         self.statuses = statuses
-        # TODO: Load actual image. The total size of the images is ~100 mb. Seems ok to load everything to memory.
         self.image = image
 
     @classmethod
-    def from_data(cls, user_id: str, likes: List[int], statuses: List[str], image: int) -> 'FBUserFeatures':
+    def from_data(cls, user_id: str, likes: List[int], statuses: List[str], image: List[float]) -> 'FBUserFeatures':
         return cls(
             user_id=user_id,
             likes=likes,

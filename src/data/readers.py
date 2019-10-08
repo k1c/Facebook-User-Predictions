@@ -3,11 +3,13 @@ from collections import defaultdict
 from typing import List, Tuple, DefaultDict
 
 import pandas as pd
+from matplotlib import image as img
 
 from constants.column_names import USER_ID, AGE, GENDER, OPENNESS, CONSCIENTIOUSNESS, EXTROVERSION, AGREEABLENESS, \
     NEUROTICISM, LIKE_ID
-from constants.directory_names import PROFILE_DIR, LIKES_DIR, RELATION_DIR
+from constants.directory_names import PROFILE_DIR, LIKES_DIR, RELATION_DIR, IMAGE_DIR
 from constants.file_names import PROFILE_FILE, RELATIONS_FILE
+from utils import detecting_faces, expand, crop_image, resize_image
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
 from data.personality_traits import PersonalityTraits
@@ -36,7 +38,27 @@ def read_statuses(data_path: str, user_id: str) -> List[str]:
 
 
 def read_image(data_path: str, user_id: str):
-    return 1
+    """
+    Reads the image of the user in the `Image` sub folder. Each user has a jpg file with a profile picture
+    titled `Image/user_id.jpg`.
+    :param data_path: Path to the main directory that contains the `Image` directory.
+    :param user_id: The hex id of the user
+    :return: image: a numpy array of dimension (128, 128, 3)
+    """
+    image_file_path = os.path.join(
+        data_path,
+        IMAGE_DIR,
+        "{}.jpg".format(user_id)
+    )
+
+    image = img.imread(image_file_path)
+
+    coordinates = detecting_faces(image)
+    coordinates = expand(coordinates)
+
+    image = crop_image(image, coordinates)
+    image = resize_image(image)
+    return image
 
 
 def read_likes(data_path: str) -> DefaultDict[str, List[int]]:
