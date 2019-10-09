@@ -6,20 +6,31 @@ from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
 from data.personality_traits import PersonalityTraits
 from estimators.base.personality_estimator import PersonalityEstimator
+from evaluation_utils import regression_score
 
 
 class BaselinePersonalityEstimator(PersonalityEstimator):
-    def __init__(self):
+    def __init__(self, valid_split: float):
         self.predictions: np.array = None
+        self.valid_split = valid_split
 
     def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]) -> None:
-        personalities: List[List[float]] = [label.personality_traits.as_list() for label in labels]
+        train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
+            features,
+            labels,
+            valid_split=self.valid_split
+        )
+
+        personalities: List[List[float]] = [label.personality_traits.as_list() for label in train_labels]
 
         self.predictions = np.mean(
             np.array(personalities),
             axis=0   # Take means of all columns
         )
-
+        valid_predictions = self.predict(valid_features)
+        scores = regression_score(predicted=valid_predictions, true=[x.personality_traits for x in valid_labels])
+        print(scores)
+        
     def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
         return [
             PersonalityTraits(
