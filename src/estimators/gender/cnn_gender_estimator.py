@@ -22,7 +22,6 @@ class CnnGenderEstimator(GenderEstimator):
 
     def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]):
 
-        # Train and validation split
         train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
             features,
             labels,

@@ -1,9 +1,8 @@
 from typing import List
-
-from torch.utils.data.dataset import Dataset
+from typing import Tuple
 
 import numpy as np
-from typing import Tuple
+from torch.utils.data.dataset import Dataset
 
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
