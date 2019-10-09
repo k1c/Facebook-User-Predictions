@@ -23,17 +23,11 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
         )
 
         self.like_graph: DefaultDict[int, List[str]] = self._build_like_graph(train_features)
-        self.user_label_graph: Dict[str, FBUserFeatures] = self._build_user_graph(train_labels)
+        self.user_label_graph: Dict[str, FBUserLabels] = self._build_user_label_graph(train_labels)
 
         valid_predictions = self.predict(valid_features)
         scores = regression_score(predicted=valid_predictions, true=[x.personality_traits for x in valid_labels])
-        print(
-            "Openness RMSE: {}",
-            "Conscientiousness RMSE: {}",
-            "Extroversion RMSE: {}",
-            "Agreeableness RMSE: {}",
-            "Neuroticism RMSE: {}".format(*scores)
-        )
+        print(scores)
 
     @staticmethod
     def _build_like_graph(features: List[FBUserFeatures]) -> DefaultDict[int, List[str]]:
@@ -44,12 +38,12 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
         return like_graph
 
     @staticmethod
-    def _build_user_graph(labels: List[FBUserLabels]) -> Dict[str, FBUserLabels]:
+    def _build_user_label_graph(labels: List[FBUserLabels]) -> Dict[str, FBUserLabels]:
         return {
             label.user_id: label for label in labels
         }
 
-    def _normalize_counts(self, similar_users: DefaultDict[str, int]) -> Dict[str, float]:
+    def _normalize_counts(self, similar_users: Dict[str, int]) -> Dict[str, float]:
         normalizing_constant = sum(similar_users.values())
         return {
             user: (float(similar_users.get(user)) / normalizing_constant) for user in similar_users.keys()
@@ -58,24 +52,29 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
     def _predict_for_user(self, feature: FBUserFeatures) -> PersonalityTraits:
         similar_users = defaultdict(int)
         for user_like in feature.likes:
-            users_that_like_this = self.like_graph.get(user_like)
+            users_that_like_this = self.like_graph.get(user_like, list())
             for user in users_that_like_this:
                 similar_users[user] += 1
-        normalized_similar_users = self._normalize_counts(similar_users)
+
         similar_users_sorted = sorted(
-            list(normalized_similar_users.keys()),
-            key=lambda x: normalized_similar_users.get(x),
+            list(similar_users.keys()),
+            key=lambda x: similar_users.get(x),
             reverse=True
         )
 
-        num_similar_users = self.num_similar_users if len(normalized_similar_users) > self.num_similar_users \
-            else len(normalized_similar_users)
+        num_similar_users = self.num_similar_users if len(similar_users) > self.num_similar_users \
+            else len(similar_users)
 
-        top_similar_users = similar_users_sorted[:num_similar_users]
+        top_similar_users = set(similar_users_sorted[:num_similar_users])
+        print(top_similar_users)
+        top_similar_users_count = self._normalize_counts(
+            {user: similar_users[user] for user in similar_users if user in top_similar_users}
+        )
         openness, conscientiousness, extroversion, agreeableness, neuroticism = 0.0, 0.0, 0.0, 0.0, 0.0
+
         for user in top_similar_users:
             user_labels = self.user_label_graph.get(user)
-            normalization = normalized_similar_users.get(user)
+            normalization = top_similar_users_count.get(user)
             openness += normalization * user_labels.personality_traits.openness
             conscientiousness += normalization * user_labels.personality_traits.conscientiousness
             extroversion += normalization * user_labels.personality_traits.extroversion

@@ -1,6 +1,7 @@
 import cv2
 from scipy import misc
 
+
 def detecting_faces(image):
 
     path_weights = "./src/haarcascade_frontalface_default.xml"

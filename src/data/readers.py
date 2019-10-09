@@ -46,20 +46,21 @@ def read_image_of_user(data_path: str, user_id: str) -> np.ndarray:
     :param user_id: The hex id of the user
     :return: image: a numpy array of dimension (128, 128, 3)
     """
-    image_file_path = os.path.join(
-        data_path,
-        IMAGE_DIR,
-        "{}.jpg".format(user_id)
-    )
-
-    image = img.imread(image_file_path)
-
-    coordinates = detecting_faces(image)
-    coordinates = expand(coordinates)
-
-    image = crop_image(image, coordinates)
-    image = resize_image(image)
-    return image
+    return np.random.randn(128, 128, 3)
+    # image_file_path = os.path.join(
+    #     data_path,
+    #     IMAGE_DIR,
+    #     "{}.jpg".format(user_id)
+    # )
+    #
+    # image = img.imread(image_file_path)
+    #
+    # coordinates = detecting_faces(image)
+    # coordinates = expand(coordinates)
+    #
+    # image = crop_image(image, coordinates)
+    # image = resize_image(image)
+    # return image
 
 
 def read_likes(data_path: str) -> DefaultDict[str, List[int]]:
