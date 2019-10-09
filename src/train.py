@@ -17,7 +17,7 @@ age_estimators = {
 
 gender_estimators = {
     'baseline': BaselineGenderEstimator,
-    'cnn' : CnnGenderEstimator
+    'cnn': CnnGenderEstimator
 }
 
 personality_estimators = {
