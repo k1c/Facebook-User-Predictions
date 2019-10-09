@@ -43,14 +43,17 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
             label.user_id: label for label in labels
         }
 
-    def _normalize_counts(self, similar_users: Dict[str, int]) -> Dict[str, float]:
+    @staticmethod
+    def _normalize_counts(similar_users: Dict[str, int]) -> Dict[str, float]:
         normalizing_constant = sum(similar_users.values())
         return {
             user: (float(similar_users.get(user)) / normalizing_constant) for user in similar_users.keys()
         }
 
     def _predict_for_user(self, feature: FBUserFeatures) -> PersonalityTraits:
+
         similar_users = defaultdict(int)
+
         for user_like in feature.likes:
             users_that_like_this = self.like_graph.get(user_like, list())
             for user in users_that_like_this:
@@ -66,10 +69,11 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
             else len(similar_users)
 
         top_similar_users = set(similar_users_sorted[:num_similar_users])
-        print(top_similar_users)
+
         top_similar_users_count = self._normalize_counts(
             {user: similar_users[user] for user in similar_users if user in top_similar_users}
         )
+
         openness, conscientiousness, extroversion, agreeableness, neuroticism = 0.0, 0.0, 0.0, 0.0, 0.0
 
         for user in top_similar_users:
