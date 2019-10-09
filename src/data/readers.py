@@ -3,6 +3,7 @@ from collections import defaultdict
 from typing import List, Tuple, DefaultDict
 
 import pandas as pd
+import numpy as np
 from matplotlib import image as img
 
 from constants.column_names import USER_ID, AGE, GENDER, OPENNESS, CONSCIENTIOUSNESS, EXTROVERSION, AGREEABLENESS, \
@@ -15,7 +16,7 @@ from data.fb_user_labels import FBUserLabels
 from data.personality_traits import PersonalityTraits
 
 
-def read_statuses(data_path: str, user_id: str) -> List[str]:
+def read_statuses_of_user(data_path: str, user_id: str) -> List[str]:
     """
     Reads the status message of the user in the `Text` sub folder. Each user has a text file with status messages
     titled `Text/user_id.txt`.
@@ -37,7 +38,7 @@ def read_statuses(data_path: str, user_id: str) -> List[str]:
     ]
 
 
-def read_image(data_path: str, user_id: str):
+def read_image_of_user(data_path: str, user_id: str) -> np.ndarray:
     """
     Reads the image of the user in the `Image` sub folder. Each user has a jpg file with a profile picture
     titled `Image/user_id.jpg`.
@@ -123,8 +124,8 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
             FBUserFeatures.from_data(
                 user_id=user_id,
                 likes=likes[user_id],
-                statuses=read_statuses(data_path, user_id),
-                image=read_image(data_path, user_id)
+                statuses=read_statuses_of_user(data_path, user_id),
+                image=read_image_of_user(data_path, user_id)
             )
         )
 
@@ -142,7 +143,6 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
                 )
             )
         )
-
     return features, labels
 
 
@@ -164,8 +164,8 @@ def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
             FBUserFeatures.from_data(
                 user_id=user_id,
                 likes=likes[user_id],
-                statuses=read_statuses(data_path, user_id),
-                image=read_image(data_path, user_id)
+                statuses=read_statuses_of_user(data_path, user_id),
+                image=read_image_of_user(data_path, user_id)
             )
         )
     return features
