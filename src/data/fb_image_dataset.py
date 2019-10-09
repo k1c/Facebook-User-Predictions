@@ -10,6 +10,7 @@ from data.fb_user_labels import FBUserLabels
 
 class FBImageDataset(Dataset):
     def __init__(self, features: List[FBUserFeatures], labels: List[FBUserLabels]):
+        assert len(features) == len(labels)
         self.features = features
         self.labels = labels
 
