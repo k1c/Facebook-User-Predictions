@@ -1,4 +1,4 @@
-from abc import abstractmethod, ABC
+from abc import abstractmethod
 from typing import List
 
 from data.fb_user_features import FBUserFeatures

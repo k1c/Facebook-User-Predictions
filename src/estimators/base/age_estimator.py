@@ -1,9 +1,8 @@
-from abc import abstractmethod, ABC
+from abc import abstractmethod
+from typing import List
 
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
-from typing import List
-
 from estimators.base.base_estimator import BaseEstimator
 
 
