@@ -1,10 +1,11 @@
 import cv2
 from PIL import Image
+import numpy as np
 
 
 def detecting_faces(image):
 
-    path_weights = "./src/haarcascade_frontalface_default.xml"
+    path_weights = "../src/haarcascade_frontalface_default.xml"
     face_cascade = cv2.CascadeClassifier(path_weights)
 
     coordinates = face_cascade.detectMultiScale(
@@ -44,4 +45,9 @@ def crop_image(image, coordinates):
 
 def resize_image(image):
     image = Image.fromarray(image, 'RGB').resize((128, 128))
+    return np.array(image)
+
+
+def normalize_image(image):
+    image = (image - np.mean(image.reshape(-1, 3), axis=0))/255
     return image
