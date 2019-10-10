@@ -1,0 +1,9 @@
+{
+  "model": "BasicNet",
+  "valid_split": 0.8,
+  "train_batch_size": 64,
+  "test_batch_size": 128,
+  "max_epochs": 1,
+  "learning_rate": 0.001
+
+}

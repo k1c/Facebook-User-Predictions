@@ -17,6 +17,8 @@ class BasicNet(nn.Module):
         self.fc = nn.Linear(64 * 32 * 32, 2)
 
     def forward(self, input):
+        input = input.view(-1, 3, 128, 128)
+
         # First convolutional block
         h = F.relu(self.conv1(input))
         h = F.relu(self.conv2(h))

@@ -6,10 +6,12 @@ from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
-from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
+#from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
 
-from utils import get_random_id
+from util.utils import get_random_id
+from util.utils import read_config_file
 
+import pdb
 
 age_estimators = {
     'baseline': BaselineAgeEstimator
@@ -22,7 +24,7 @@ gender_estimators = {
 
 personality_estimators = {
     'baseline': BaselinePersonalityEstimator,
-    'bert_regression': BertRegressionPersonalityEstimator
+#    'bert_regression': BertRegressionPersonalityEstimator
 }
 
 
@@ -31,11 +33,13 @@ def main(arguments: argparse.Namespace):
     print("Loading training data from '{}' ...".format(arguments.data_path))
     features, labels = read_train_data(data_path=arguments.data_path)
 
+    config_gender = read_config_file("./config/configGender.json")
+
     print("Initialising estimators ...")
     fb_user_estimator = FBUserEstimator(
         model_id=get_random_id(),
         age_estimator=age_estimators.get(arguments.age_estimator)(),
-        gender_estimator=gender_estimators.get(arguments.gender_estimator)(),
+        gender_estimator=gender_estimators.get(arguments.gender_estimator)(config_gender),
         personality_estimator=personality_estimators.get(arguments.personality_estimator)()
     )
 
