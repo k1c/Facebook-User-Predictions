@@ -1,15 +1,16 @@
 from typing import List
+import numpy as np
 
 
 class FBUserFeatures:
-    def __init__(self, user_id: str, likes: List[int], statuses: List[str], image: List[float]):
+    def __init__(self, user_id: str, likes: List[int], statuses: List[str], image: np.ndarray):
         self.user_id = user_id
         self.likes = likes
         self.statuses = statuses
         self.image = image
 
     @classmethod
-    def from_data(cls, user_id: str, likes: List[int], statuses: List[str], image: List[float]) -> 'FBUserFeatures':
+    def from_data(cls, user_id: str, likes: List[int], statuses: List[str], image: np.ndarray) -> 'FBUserFeatures':
         return cls(
             user_id=user_id,
             likes=likes,
