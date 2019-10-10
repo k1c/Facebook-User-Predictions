@@ -1,5 +1,6 @@
 import cv2
-from scipy import misc
+from PIL import Image
+
 
 def detecting_faces(image):
 
@@ -23,9 +24,9 @@ def expand(coordinates):
     x_max = pts[0] + pts[2]
     y_max = pts[1] + pts[3]
 
-    x_min -= (0.15 * pts[2])
+    x_min = max(0, x_min-(0.15 * pts[2]))
     x_max += (0.15 * pts[2])
-    y_min -= (0.20 * pts[3])
+    y_min = max(0, y_min-(0.20 * pts[3]))
     y_max += (0.20 * pts[3])
     return [[int(x_min), int(y_min), int(x_max - x_min), int(y_max - y_min)]]
 
@@ -42,5 +43,5 @@ def crop_image(image, coordinates):
 
 
 def resize_image(image):
-    image = misc.imresize(image, (128, 128))
+    image = Image.fromarray(image, 'RGB').resize((128, 128))
     return image
