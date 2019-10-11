@@ -11,7 +11,6 @@ from data.fb_user_labels import FBUserLabels
 from estimators.base.gender_estimator import GenderEstimator
 from networks.cnn import BasicNet
 
-import pdb
 
 class CnnGenderEstimator(GenderEstimator):
 
@@ -23,6 +22,7 @@ class CnnGenderEstimator(GenderEstimator):
         self.test_batch_size = config["test_batch_size"]
         self.learning_rate = config["learning_rate"]
         self.max_epochs = config["max_epochs"]
+        self.prediction: int = None
 
     def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]):
 
@@ -81,4 +81,14 @@ class CnnGenderEstimator(GenderEstimator):
             batch_size=self.test_batch_size,
             shuffle=True
         )
-        pass
+
+        self.prediction = []
+
+        for batch_idx, (data) in enumerate(test_dataloader):
+            self.prediction.append(self.neural_net(data))
+
+        self.prediction = torch.stack(self.prediction, 0).detach().numpy()
+        self.prediction = self.prediction.reshape(-1, 2)
+        self.prediction = self.prediction.argmax(axis=1)
+
+        return self.prediction.tolist()

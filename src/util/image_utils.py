@@ -49,5 +49,5 @@ def resize_image(image):
 
 
 def normalize_image(image):
-    image = (image - np.mean(image.reshape(-1, 3), axis=0))/255
-    return image
+    # image = (image - np.mean(image.reshape(-1, 3), axis=0))/255
+    return image/255

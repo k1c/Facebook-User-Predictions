@@ -12,19 +12,20 @@ from data.fb_user_labels import FBUserLabels
 
 class FBImageDataset(Dataset):
     def __init__(self, features: List[FBUserFeatures], labels: List[FBUserLabels] or None):
-        assert len(features) == len(labels)
+        if labels is not None:
+            assert len(features) == len(labels)
         self.features = features
         self.labels = labels
 
     def __getitem__(self, idx: int) -> Tuple[np.ndarray, int]:
         image = self.features[idx].image
-        label = self.labels[idx].gender
 
         # change label to onehot encoding
-        if label == 0:
-            label = [1, 0]
-        else:
-            label = [0, 1]
+        if self.labels is not None:
+            if self.labels[idx].gender == 0:
+                label = [1, 0]
+            else:
+                label = [0, 1]
 
         # apply image transforms
         coordinates = detecting_faces(image)
