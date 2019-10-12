@@ -69,8 +69,11 @@ class CnnGenderEstimator(GenderEstimator):
         def log_validation_results(trainer):
             evaluator.run(valid_dataloader)
             metrics = evaluator.state.metrics
-            print("Validation Results - Epoch: {}  Avg accuracy: {:.2f} Avg loss: {:.2f}"
-                  .format(trainer.state.epoch, metrics['accuracy'], metrics['BCE']))
+
+            print("Validation Results - Epoch[{}] Avg accuracy: {:.2f}".format(
+                trainer.state.epoch,
+                metrics['accuracy']
+            ))
 
         trainer.run(train_dataloader, max_epochs=self.max_epochs)
 
