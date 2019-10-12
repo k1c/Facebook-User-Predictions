@@ -6,7 +6,7 @@ import os
 from data.fb_user_labels import FBUserLabels
 from data.readers import read_prediction_data
 from estimators.fb_user_estimator import FBUserEstimator
-from utils import get_current_timestamp
+from util.utils import get_current_timestamp
 
 
 def main(arguments: argparse.Namespace):

@@ -4,7 +4,7 @@ from subprocess import call
 
 sys.path.append('src/')
 
-from utils import get_current_timestamp
+from util.utils import get_current_timestamp
 
 MODEL_PATH = 'models/2019-09-29_18.04.51.pkl'
 

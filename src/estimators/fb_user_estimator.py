@@ -9,7 +9,7 @@ from data.personality_traits import PersonalityTraits
 from estimators.base.age_estimator import AgeEstimator
 from estimators.base.gender_estimator import GenderEstimator
 from estimators.base.personality_estimator import PersonalityEstimator
-from utils import get_current_timestamp
+from util.utils import get_current_timestamp
 
 
 class FBUserEstimator:

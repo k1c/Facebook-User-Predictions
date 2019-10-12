@@ -10,7 +10,6 @@ from constants.column_names import USER_ID, AGE, GENDER, OPENNESS, CONSCIENTIOUS
     NEUROTICISM, LIKE_ID
 from constants.directory_names import PROFILE_DIR, LIKES_DIR, RELATION_DIR, IMAGE_DIR
 from constants.file_names import PROFILE_FILE, RELATIONS_FILE
-from image_utils import detecting_faces, expand, crop_image, resize_image
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
 from data.personality_traits import PersonalityTraits
@@ -44,7 +43,7 @@ def read_image_of_user(data_path: str, user_id: str) -> np.ndarray:
     titled `Image/user_id.jpg`.
     :param data_path: Path to the main directory that contains the `Image` directory.
     :param user_id: The hex id of the user
-    :return: image: a numpy array of dimension (128, 128, 3)
+    :return: image: a numpy array
     """
     image_file_path = os.path.join(
         data_path,
@@ -53,12 +52,6 @@ def read_image_of_user(data_path: str, user_id: str) -> np.ndarray:
     )
 
     image = img.imread(image_file_path)
-
-    coordinates = detecting_faces(image)
-    coordinates = expand(coordinates)
-
-    image = crop_image(image, coordinates)
-    image = resize_image(image)
     return image
 
 
