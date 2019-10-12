@@ -3,7 +3,7 @@
 import argparse
 import os
 
-from data.fb_user_labels import FBUserLabels
+from data.user_labels import UserLabels
 from data.readers import read_prediction_data
 from estimators.fb_user_estimator import FBUserEstimator
 from util.utils import get_current_timestamp
@@ -19,7 +19,7 @@ def main(arguments: argparse.Namespace):
     print("Predicting labels for test data ...")
     predictions = fb_user_estimator.predict(features)
 
-    save_path = FBUserLabels.save(
+    save_path = UserLabels.save(
         predictions=predictions,
         save_path=arguments.output_path
     )

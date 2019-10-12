@@ -5,9 +5,9 @@ from ignite.engine import create_supervised_trainer, create_supervised_evaluator
 from ignite.metrics import Accuracy, Loss
 from torch.utils.data.dataloader import DataLoader
 
-from data.fb_image_dataset import FBImageDataset
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+from data.image_dataset import ImageDataset
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 from estimators.base.gender_estimator import GenderEstimator
 from networks.cnn import BasicNet
 from util.utils import read_config_file
@@ -26,7 +26,7 @@ class CnnGenderEstimator(GenderEstimator):
         self.max_epochs = config["max_epochs"]
         self.prediction: int = None
 
-    def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]):
+    def fit(self, features: List[UserFeatures], labels: List[UserLabels]):
 
         train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
             features,
@@ -35,13 +35,13 @@ class CnnGenderEstimator(GenderEstimator):
         )
 
         train_dataloader = DataLoader(
-            dataset=FBImageDataset(train_features, train_labels),
+            dataset=ImageDataset(train_features, train_labels),
             batch_size=self.train_batch_size,
             shuffle=True
         )
 
         valid_dataloader = DataLoader(
-            dataset=FBImageDataset(valid_features, valid_labels),
+            dataset=ImageDataset(valid_features, valid_labels),
             batch_size=self.train_batch_size,
             shuffle=True
         )
@@ -79,10 +79,10 @@ class CnnGenderEstimator(GenderEstimator):
 
         trainer.run(train_dataloader, max_epochs=self.max_epochs)
 
-    def predict(self, features: List[FBUserFeatures]) -> List[int]:
+    def predict(self, features: List[UserFeatures]) -> List[int]:
 
         test_dataloader = DataLoader(
-            dataset=FBImageDataset(features, labels=None),
+            dataset=ImageDataset(features, labels=None),
             batch_size=self.test_batch_size,
             shuffle=True
         )

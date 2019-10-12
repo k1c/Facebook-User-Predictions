@@ -6,12 +6,12 @@ import numpy as np
 from torch.utils.data.dataset import Dataset
 
 from util.image_utils import detecting_faces, expand, crop_image, resize_image, normalize_image
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 
 
-class FBImageDataset(Dataset):
-    def __init__(self, features: List[FBUserFeatures], labels: List[FBUserLabels] or None):
+class ImageDataset(Dataset):
+    def __init__(self, features: List[UserFeatures], labels: List[UserLabels] or None):
         if labels is not None:
             assert len(features) == len(labels)
         self.features = features

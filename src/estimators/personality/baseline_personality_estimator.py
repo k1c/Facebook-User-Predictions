@@ -2,8 +2,8 @@ from typing import List
 
 import numpy as np
 
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 from data.personality_traits import PersonalityTraits
 from estimators.base.personality_estimator import PersonalityEstimator
 from evaluation_utils import regression_score
@@ -14,7 +14,7 @@ class BaselinePersonalityEstimator(PersonalityEstimator):
         self.predictions: np.array = None
         self.valid_split = 0.8
 
-    def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]) -> None:
+    def fit(self, features: List[UserFeatures], labels: List[UserLabels]) -> None:
         train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
             features,
             labels,
@@ -31,7 +31,7 @@ class BaselinePersonalityEstimator(PersonalityEstimator):
         scores = regression_score(predicted=valid_predictions, true=[x.personality_traits for x in valid_labels])
         print(scores)
         
-    def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
+    def predict(self, features: List[UserFeatures]) -> List[PersonalityTraits]:
         return [
             PersonalityTraits(
                 openness=self.predictions[0],

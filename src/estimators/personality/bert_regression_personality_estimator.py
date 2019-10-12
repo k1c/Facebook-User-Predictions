@@ -1,8 +1,8 @@
 from typing import List
 import numpy as np
 
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 from data.personality_traits import PersonalityTraits
 from estimators.base.personality_estimator import PersonalityEstimator
 
@@ -70,7 +70,7 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
         attention_mask = zero_pad_input_ids.ne(0).float()  # everything in input not equal to 0 will get 1, else 0
         return attention_mask
 
-    def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]) -> None:
+    def fit(self, features: List[UserFeatures], labels: List[UserLabels]) -> None:
 
         dataset = self.get_statuses_with_personality_labels(features, labels)
 
@@ -133,7 +133,7 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
                     running_loss = 0.0
 
 
-    def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
+    def predict(self, features: List[UserFeatures]) -> List[PersonalityTraits]:
 
         statuses = list()
         for feature in features:

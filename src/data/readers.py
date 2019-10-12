@@ -10,8 +10,8 @@ from constants.column_names import USER_ID, AGE, GENDER, OPENNESS, CONSCIENTIOUS
     NEUROTICISM, LIKE_ID
 from constants.directory_names import PROFILE_DIR, LIKES_DIR, RELATION_DIR, IMAGE_DIR
 from constants.file_names import PROFILE_FILE, RELATIONS_FILE
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 from data.personality_traits import PersonalityTraits
 from data.pre_processors import pre_process_likes_v1
 
@@ -110,7 +110,7 @@ def int_to_age_category(int_age_category: int) -> str:
         return "50-xx"
 
 
-def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLabels]]:
+def read_train_data(data_path: str) -> Tuple[List[UserFeatures], List[UserLabels]]:
     """
     The main entry point to read all the data. It goes through the `Profile/Profile.csv` file, gets the `userid`,
     and collects the associated status messages, likes and image for the user and encapsulates them in the
@@ -142,7 +142,7 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
         user_id = row[USER_ID]
 
         features.append(
-            FBUserFeatures.from_data(
+            UserFeatures.from_data(
                 user_id=user_id,
                 likes=likes[user_id],
                 likes_preprocessed_v1=likes_preprocessed_v1[
@@ -156,7 +156,7 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
         )
 
         labels.append(
-            FBUserLabels.from_data(
+            UserLabels.from_data(
                 user_id=user_id,
                 age=row[AGE],
                 gender=row[GENDER],
@@ -172,7 +172,7 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
     return features, labels
 
 
-def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
+def read_prediction_data(data_path: str) -> List[UserFeatures]:
     profile_file_path = os.path.join(
         data_path,
         PROFILE_DIR,
@@ -190,7 +190,7 @@ def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
         user_id = row[USER_ID]
 
         features.append(
-            FBUserFeatures.from_data(
+            UserFeatures.from_data(
                 user_id=user_id,
                 likes=likes[user_id],
                 likes_preprocessed_v1=likes_preprocessed_v1[
