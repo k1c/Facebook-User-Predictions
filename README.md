@@ -8,8 +8,8 @@ It contains our solution for the project assignment of IFT6758 Fall 2019.
 Our linux server is located at 35.208.187.181 and our user name is user09.
 
 Its folder structure is:
-* `data.zip`
-* `data/`
+* `new_data.zip`
+* `new_data/`
     * The contents of data.zip.
 * `submission/`
     * The contents of this gitlab repository and where the TAs will automatically collect our software from.
@@ -18,30 +18,28 @@ Its folder structure is:
 
 Make sure to ssh onto our linux server mentioned above.
 
-* Note to the TAs: Simply do the following to obtain the weekly predictions (no pre-training needed)
-after entering the `submission/` folder:
+* Note to the TAs: Our shell script activates the base conda environment and then uses pip to install any missing
+packages we need for our software from requirements.txt. Get predictions using our software with:
      ```bash
-    module load anaconda/3
-    conda-activate
-    python ift6758.py -i <path-to-contents-of-data.zip> -o <path-to-save-predictions>
+    ./ift6758 -i <path-to-contents-of-data.zip> -o <path-to-save-predictions>
     ```
 
 ### Training
 
 1. ssh onto our linux server.
-2. Enter the folder with our software, sync to latest and load and activate anaconda:
+2. Enter the folder with our software, sync to latest and load and activate our custom fb-env:
     ```bash
     cd submission
     git pull
     module load anaconda/3
-    conda-activate
+    conda activate fb-env
     ```
 3. Train the baseline model. As an example, using the baseline estimators: 
     ```bash
     python src/train.py --age_estimator=baseline --gender_estimator=baseline --personality_estimator=baseline
     ```
    This will:
-   * Load the training data from `../data/Train/`
+   * Load the training data from `../new_data/Train/`
    * Save a model named `%Y-%m-%d_%H.%M.%S.pkl` in the folder `submission/models/`.
    
    Alternatively:
@@ -49,10 +47,10 @@ after entering the `submission/` folder:
    * Use `--save_path` if you want the model saved in a different location.
    Example:
     ```bash
-    python src/train.py --data_path="../data/Train/" --save_path="my-models/" --age_estimator=baseline --gender_estimator=baseline --personality_estimator=baseline
+    python src/train.py --data_path="../new_data/Train/" --save_path="my-models/" --age_estimator=baseline --gender_estimator=baseline --personality_estimator=baseline
     ```
    This will:
-   * Load the training data from `../data/Train/`
+   * Load the training data from `../new_data/Train/`
    * Save a model named `%Y-%m-%d_%H.%M.%S.pkl` in the folder `submission/my-models/`.
    
 
@@ -67,7 +65,7 @@ our linux machine. Follow the steps in the section "Setting up the weekly model"
     cd submission
     git pull
     module load anaconda/3
-    conda-activate 
+    conda activate fb-env
     ```
 4. The minimal command to obtain predictions using the configured trained model is:
     ```bash 
@@ -96,7 +94,7 @@ our linux machine. Follow the steps in the section "Setting up the weekly model"
    * Use `-o` if you want the test data predictions saved in a different location.
     Example:
     ```bash 
-    python ift6758.py -i "../data/Public_Test/" -o "my-predictions/"
+    python ift6758.py -i "../new_data/Public_Test/" -o "my-predictions/"
     ```
    which will save an `.xml` file for every person's predictions directly inside `submission/my-predictions/`
 

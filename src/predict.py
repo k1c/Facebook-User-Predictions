@@ -29,7 +29,7 @@ def main(arguments: argparse.Namespace):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     default_output_path = "predictions/{}/".format(get_current_timestamp())
-    parser.add_argument("-i", "--input_path", type=str, default="../data/Public_Test/")
+    parser.add_argument("-i", "--input_path", type=str, default="../new_data/Public_Test/")
     parser.add_argument("-o", "--output_path", type=str, default=default_output_path)
     parser.add_argument("-m", "--model_path", type=str, required=True)
     args = parser.parse_args()

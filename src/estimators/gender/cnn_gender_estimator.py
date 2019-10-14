@@ -10,11 +10,13 @@ from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
 from estimators.base.gender_estimator import GenderEstimator
 from networks.cnn import BasicNet
+from util.utils import read_config_file
 
 
 class CnnGenderEstimator(GenderEstimator):
 
-    def __init__(self, config: Dict):
+    def __init__(self):
+        config = read_config_file("src/config/configGender.json")
         if config["model"] == "BasicNet":
             self.neural_net = BasicNet()
         self.valid_split = config["valid_split"]
