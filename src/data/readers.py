@@ -117,8 +117,10 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
             FBUserFeatures.from_data(
                 user_id=user_id,
                 likes=likes[user_id],
-                statuses=read_statuses_of_user(data_path, user_id),
-                image=read_image_of_user(data_path, user_id)
+                # TODO: Implement. Data structure has changed. Old code: read_statuses_of_user(data_path, user_id),
+                statuses=[],
+                # TODO: Implement. Data structure has changed. Old code: read_image_of_user(data_path, user_id)
+                image=np.array([])
             )
         )
 

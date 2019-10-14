@@ -10,7 +10,6 @@ from estimators.personality.bert_regression_personality_estimator import BertReg
 from estimators.personality.graph_similarity_personality_estimator import GraphSimilarityPersonalityEstimator
 
 from util.utils import get_random_id
-from util.utils import read_config_file
 
 
 age_estimators = {
@@ -34,13 +33,11 @@ def main(arguments: argparse.Namespace):
     print("Loading training data from '{}' ...".format(arguments.data_path))
     features, labels = read_train_data(data_path=arguments.data_path)
 
-    config_gender = read_config_file("./config/configGender.json")
-
     print("Initialising estimators ...")
     fb_user_estimator = FBUserEstimator(
         model_id=get_random_id(),
         age_estimator=age_estimators.get(arguments.age_estimator)(),
-        gender_estimator=gender_estimators.get(arguments.gender_estimator)(config_gender),
+        gender_estimator=gender_estimators.get(arguments.gender_estimator)(),
         personality_estimator=personality_estimators.get(arguments.personality_estimator)()
     )
 
@@ -54,7 +51,7 @@ def main(arguments: argparse.Namespace):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, default="../data/Train/")
+    parser.add_argument("--data_path", type=str, default="../new_data/Train/")
     parser.add_argument("--age_estimator", type=str, choices=age_estimators.keys(), required=True)
     parser.add_argument("--gender_estimator", type=str, choices=gender_estimators.keys(), required=True)
     parser.add_argument("--personality_estimator", choices=personality_estimators.keys(), required=True)
