@@ -3,17 +3,33 @@ import numpy as np
 
 
 class FBUserFeatures:
-    def __init__(self, user_id: str, likes: List[int], statuses: List[str], image: np.ndarray):
+    def __init__(
+            self,
+            user_id: str,
+            likes: List[int],
+            likes_preprocessed_v1: List[float],
+            statuses: List[str],
+            image: np.ndarray
+    ):
         self.user_id = user_id
         self.likes = likes
+        self.likes_preprocessed_v1 = likes_preprocessed_v1
         self.statuses = statuses
         self.image = image
 
     @classmethod
-    def from_data(cls, user_id: str, likes: List[int], statuses: List[str], image: np.ndarray) -> 'FBUserFeatures':
+    def from_data(
+            cls,
+            user_id: str,
+            likes: List[int],
+            likes_preprocessed_v1: List[float],
+            statuses: List[str],
+            image: np.ndarray
+    ) -> 'FBUserFeatures':
         return cls(
             user_id=user_id,
             likes=likes,
+            likes_preprocessed_v1=likes_preprocessed_v1,
             statuses=statuses,
             image=image
         )
