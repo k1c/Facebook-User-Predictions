@@ -2,6 +2,9 @@ import argparse
 
 from data.readers import read_train_data
 from estimators.age.baseline_age_estimator import BaselineAgeEstimator
+from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
+from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
+from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
@@ -13,24 +16,26 @@ from util.utils import get_random_id
 
 
 age_estimators = {
-    'baseline': BaselineAgeEstimator
+    'baseline': BaselineAgeEstimator,
+    'relation_v1': RelationV1AgeEstimator
 }
 
 gender_estimators = {
     'baseline': BaselineGenderEstimator,
-    'cnn': CnnGenderEstimator
+    'cnn': CnnGenderEstimator,
+    'relation_v1': RelationV1GenderEstimator
 }
 
 personality_estimators = {
     'baseline': BaselinePersonalityEstimator,
     'bert_regression': BertRegressionPersonalityEstimator,
-    'graph_regression': GraphSimilarityPersonalityEstimator
+    'graph_regression': GraphSimilarityPersonalityEstimator,
+    'relation_v1': RelationV1PersonalityEstimator
 }
 
 
 def main(arguments: argparse.Namespace):
-    print("")
-    print("Loading training data from '{}' ...".format(arguments.data_path))
+    print("\nLoading training data from '{}' ...".format(arguments.data_path))
     features, labels = read_train_data(data_path=arguments.data_path)
 
     print("Initialising estimators ...")

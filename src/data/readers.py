@@ -13,6 +13,7 @@ from constants.file_names import PROFILE_FILE, RELATIONS_FILE
 from data.fb_user_features import FBUserFeatures
 from data.fb_user_labels import FBUserLabels
 from data.personality_traits import PersonalityTraits
+from data.pre_processors import pre_process_likes_v1
 
 
 def read_statuses_of_user(data_path: str, user_id: str) -> List[str]:
@@ -87,6 +88,28 @@ def categorize_age(age: str) -> str:
         return "50-xx"
 
 
+def age_category_to_int(age_category: str) -> int:
+    if age_category == "xx-24":
+        return 0
+    elif age_category == "25-34":
+        return 1
+    elif age_category == "35-49":
+        return 2
+    else:
+        return 3
+
+
+def int_to_age_category(int_age_category: int) -> str:
+    if int_age_category == 0:
+        return "xx-24"
+    elif int_age_category == 1:
+        return "25-34"
+    elif int_age_category == 2:
+        return "35-49"
+    else:
+        return "50-xx"
+
+
 def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLabels]]:
     """
     The main entry point to read all the data. It goes through the `Profile/Profile.csv` file, gets the `userid`,
@@ -106,9 +129,14 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
         converters={
             AGE: categorize_age
         }
+    ).sort_values(  # So that custom preprocessed data can be in the same order
+        by=['userid']
     )
     likes = read_likes(data_path)
     features, labels = list(), list()
+
+    # Pre-processing
+    likes_preprocessed_v1 = pre_process_likes_v1(data_path)
 
     for _, row in profile_df.iterrows():
         user_id = row[USER_ID]
@@ -117,6 +145,9 @@ def read_train_data(data_path: str) -> Tuple[List[FBUserFeatures], List[FBUserLa
             FBUserFeatures.from_data(
                 user_id=user_id,
                 likes=likes[user_id],
+                likes_preprocessed_v1=likes_preprocessed_v1[
+                    likes_preprocessed_v1['userid'] == user_id
+                ][likes_preprocessed_v1.columns[1:]].to_numpy(),
                 # TODO: Implement. Data structure has changed. Old code: read_statuses_of_user(data_path, user_id),
                 statuses=[],
                 # TODO: Implement. Data structure has changed. Old code: read_image_of_user(data_path, user_id)
@@ -152,6 +183,9 @@ def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
     likes = read_likes(data_path)
     features, labels = list(), list()
 
+    # Pre-processing
+    likes_preprocessed_v1 = pre_process_likes_v1(data_path)
+
     for _, row in profile_df.iterrows():
         user_id = row[USER_ID]
 
@@ -159,6 +193,9 @@ def read_prediction_data(data_path: str) -> List[FBUserFeatures]:
             FBUserFeatures.from_data(
                 user_id=user_id,
                 likes=likes[user_id],
+                likes_preprocessed_v1=likes_preprocessed_v1[
+                    likes_preprocessed_v1['userid'] == user_id
+                ][likes_preprocessed_v1.columns[1:]].to_numpy(),
                 statuses=read_statuses_of_user(data_path, user_id),
                 image=read_image_of_user(data_path, user_id)
             )
