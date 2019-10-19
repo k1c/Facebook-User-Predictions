@@ -1,12 +1,13 @@
 from typing import List
 
 import numpy as np
+import pandas as pd
 
 from data.user_features import UserFeatures
 from data.user_labels import UserLabels
 from data.personality_traits import PersonalityTraits
 from estimators.base.personality_estimator import PersonalityEstimator
-from evaluation_utils import regression_score
+from evaluation.evaluation_utils import regression_score
 
 
 class BaselinePersonalityEstimator(PersonalityEstimator):
@@ -14,24 +15,24 @@ class BaselinePersonalityEstimator(PersonalityEstimator):
         self.predictions: np.array = None
         self.valid_split = 0.8
 
-    def fit(self, features: List[UserFeatures], labels: List[UserLabels]) -> None:
-        train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
-            features,
-            labels,
-            valid_split=self.valid_split
-        )
+    def fit(self,
+            features: List[UserFeatures],
+            liwc_df: pd.DataFrame,
+            nrc_df: pd.DataFrame,
+            labels: List[UserLabels]) -> None:
 
-        personalities: List[List[float]] = [label.personality_traits.as_list() for label in train_labels]
+        personalities: List[List[float]] = [label.personality_traits.as_list() for label in labels]
 
         self.predictions = np.mean(
             np.array(personalities),
             axis=0   # Take means of all columns
         )
-        valid_predictions = self.predict(valid_features)
-        scores = regression_score(predicted=valid_predictions, true=[x.personality_traits for x in valid_labels])
-        print(scores)
-        
-    def predict(self, features: List[UserFeatures]) -> List[PersonalityTraits]:
+
+    def predict(self,
+                features: List[UserFeatures],
+                liwc_df: pd.DataFrame,
+                nrc_df: pd.DataFrame) -> List[PersonalityTraits]:
+
         return [
             PersonalityTraits(
                 openness=self.predictions[0],

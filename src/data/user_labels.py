@@ -18,19 +18,6 @@ class UserLabels:
         self.gender = gender
         self.personality_traits = personality_traits
 
-    @classmethod
-    def from_data(cls,
-                  user_id: str,
-                  age: str,
-                  gender: int,
-                  personality_traits: PersonalityTraits) -> 'UserLabels':
-        return cls(
-            user_id=user_id,
-            age=age,
-            gender=gender,
-            personality_traits=personality_traits
-        )
-
     def save_obj(self, save_path: str) -> None:
         """
         Serializes the object data and stores it in the following format in a file save_path/user_id.xml:

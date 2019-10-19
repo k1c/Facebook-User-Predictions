@@ -1,11 +1,13 @@
 from collections import defaultdict
 from typing import List, DefaultDict, Dict
 
+import pandas as pd
+
+from data.personality_traits import PersonalityTraits
 from data.user_features import UserFeatures
 from data.user_labels import UserLabels
-from data.personality_traits import PersonalityTraits
 from estimators.base.personality_estimator import PersonalityEstimator
-from evaluation_utils import regression_score
+from evaluation.evaluation_utils import regression_score
 
 
 class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
@@ -15,7 +17,11 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
         self.like_graph: DefaultDict[int, List[str]] = None
         self.user_label_graph: Dict[str, UserLabels] = None
 
-    def fit(self, features: List[UserFeatures], labels: List[UserLabels]) -> None:
+    def fit(self,
+            features: List[UserFeatures],
+            liwc_df: pd.DataFrame,
+            nrc_df: pd.DataFrame,
+            labels: List[UserLabels]) -> None:
         train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
             features,
             labels,
@@ -93,5 +99,8 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
             neuroticism=neuroticism
         )
 
-    def predict(self, features: List[UserFeatures]) -> List[PersonalityTraits]:
+    def predict(self,
+                features: List[UserFeatures],
+                liwc_df: pd.DataFrame,
+                nrc_df: pd.DataFrame) -> List[PersonalityTraits]:
         return [self._predict_for_user(feature) for feature in features]

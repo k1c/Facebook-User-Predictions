@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from typing import Tuple
 
 import torch
@@ -11,9 +11,11 @@ from data.user_labels import UserLabels
 
 
 class ImageDataset(Dataset):
-    def __init__(self, features: List[UserFeatures], labels: List[UserLabels] or None):
+    def __init__(self, features: List[UserFeatures], labels: Optional[List[UserLabels]] = None):
+
         if labels is not None:
             assert len(features) == len(labels)
+
         self.features = features
         self.labels = labels
 

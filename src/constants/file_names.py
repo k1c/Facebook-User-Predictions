@@ -1,2 +1,5 @@
 PROFILE_FILE = "Profile.csv"
 RELATIONS_FILE = "Relation.csv"
+TEXT_LIWC_FILE = "liwc.csv"
+TEXT_NRC_FILE = "nrc.csv"
+IMAGE_FILE = "oxford.csv"

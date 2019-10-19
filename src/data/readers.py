@@ -3,57 +3,44 @@ from collections import defaultdict
 from typing import List, Tuple, DefaultDict
 
 import pandas as pd
-import numpy as np
-from matplotlib import image as img
 
 from constants.column_names import USER_ID, AGE, GENDER, OPENNESS, CONSCIENTIOUSNESS, EXTROVERSION, AGREEABLENESS, \
     NEUROTICISM, LIKE_ID
-from constants.directory_names import PROFILE_DIR, LIKES_DIR, RELATION_DIR, IMAGE_DIR
-from constants.file_names import PROFILE_FILE, RELATIONS_FILE
+from constants.directory_names import PROFILE_DIR, TEXT_DIR, RELATION_DIR, IMAGE_DIR
+from constants.file_names import PROFILE_FILE, RELATIONS_FILE, TEXT_LIWC_FILE, TEXT_NRC_FILE, IMAGE_FILE
 from data.user_features import UserFeatures
 from data.user_labels import UserLabels
 from data.personality_traits import PersonalityTraits
-from data.pre_processors import pre_process_likes_v1
 
 
-def read_statuses_of_user(data_path: str, user_id: str) -> List[str]:
-    """
-    Reads the status message of the user in the `Text` sub folder. Each user has a text file with status messages
-    titled `Text/user_id.txt`.
-    :param data_path: Path to the main directory that contains the `Text` directory.
-    :param user_id: The hex id of the user
-    :return:
-    """
-    status_file_path = os.path.join(
-        data_path,
-        LIKES_DIR,
-        "{}.txt".format(user_id)
+def read_liwc(data_path: str) -> pd.DataFrame:
+    return pd.read_csv(
+        os.path.join(
+            data_path,
+            TEXT_DIR,
+            TEXT_LIWC_FILE
+        )
     )
 
-    with open(status_file_path, "r", errors="replace") as f:
-        content = f.readlines()
 
-    return [
-        line.strip() for line in content
-    ]
-
-
-def read_image_of_user(data_path: str, user_id: str) -> np.ndarray:
-    """
-    Reads the image of the user in the `Image` sub folder. Each user has a jpg file with a profile picture
-    titled `Image/user_id.jpg`.
-    :param data_path: Path to the main directory that contains the `Image` directory.
-    :param user_id: The hex id of the user
-    :return: image: a numpy array
-    """
-    image_file_path = os.path.join(
-        data_path,
-        IMAGE_DIR,
-        "{}.jpg".format(user_id)
+def read_nrc(data_path: str) -> pd.DataFrame:
+    return pd.read_csv(
+        os.path.join(
+            data_path,
+            TEXT_DIR,
+            TEXT_NRC_FILE
+        )
     )
 
-    image = img.imread(image_file_path)
-    return image
+
+def read_oxford(data_path: str) -> pd.DataFrame:
+    return pd.read_csv(
+        os.path.join(
+            data_path,
+            IMAGE_DIR,
+            IMAGE_FILE
+        )
+    )
 
 
 def read_likes(data_path: str) -> DefaultDict[str, List[int]]:
@@ -132,31 +119,20 @@ def read_train_data(data_path: str) -> Tuple[List[UserFeatures], List[UserLabels
     ).sort_values(  # So that custom preprocessed data can be in the same order
         by=['userid']
     )
-    likes = read_likes(data_path)
+    likes = read_likes("/Users/adityajoshi/Facebook-User-Predictions/datasets/synthetic")
     features, labels = list(), list()
-
-    # Pre-processing
-    likes_preprocessed_v1 = pre_process_likes_v1(data_path)
 
     for _, row in profile_df.iterrows():
         user_id = row[USER_ID]
-
         features.append(
-            UserFeatures.from_data(
+            UserFeatures(
                 user_id=user_id,
-                likes=likes[user_id],
-                likes_preprocessed_v1=likes_preprocessed_v1[
-                    likes_preprocessed_v1['userid'] == user_id
-                ][likes_preprocessed_v1.columns[1:]].to_numpy(),
-                # TODO: Implement. Data structure has changed. Old code: read_statuses_of_user(data_path, user_id),
-                statuses=[],
-                # TODO: Implement. Data structure has changed. Old code: read_image_of_user(data_path, user_id)
-                image=np.array([])
+                likes=likes[user_id]
             )
         )
 
         labels.append(
-            UserLabels.from_data(
+            UserLabels(
                 user_id=user_id,
                 age=row[AGE],
                 gender=row[GENDER],
@@ -181,23 +157,16 @@ def read_prediction_data(data_path: str) -> List[UserFeatures]:
 
     profile_df = pd.read_csv(profile_file_path)
     likes = read_likes(data_path)
-    features, labels = list(), list()
 
-    # Pre-processing
-    likes_preprocessed_v1 = pre_process_likes_v1(data_path)
+    features = list()
 
     for _, row in profile_df.iterrows():
         user_id = row[USER_ID]
 
         features.append(
-            UserFeatures.from_data(
+            UserFeatures(
                 user_id=user_id,
-                likes=likes[user_id],
-                likes_preprocessed_v1=likes_preprocessed_v1[
-                    likes_preprocessed_v1['userid'] == user_id
-                ][likes_preprocessed_v1.columns[1:]].to_numpy(),
-                statuses=read_statuses_of_user(data_path, user_id),
-                image=read_image_of_user(data_path, user_id)
+                likes=likes[user_id]
             )
         )
     return features
