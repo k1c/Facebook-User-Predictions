@@ -36,7 +36,11 @@ class FBUserEstimator:
         self.age_estimator.fit(features, labels)
         self.gender_estimator.fit(features, oxford_df, labels)
 
-    def predict(self, features: List[UserFeatures], liwc_df: pd.DataFrame, nrc_df: pd.DataFrame, oxford_df: pd.DataFrame) -> List[UserLabels]:
+    def predict(self,
+                features: List[UserFeatures],
+                liwc_df: pd.DataFrame,
+                nrc_df: pd.DataFrame,
+                oxford_df: pd.DataFrame) -> List[UserLabels]:
 
         age_predictions: List[str] = self.age_estimator.predict(features)
         gender_predictions: List[int] = self.gender_estimator.predict(features, oxford_df)

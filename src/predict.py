@@ -15,8 +15,8 @@ def main(arguments: argparse.Namespace):
     fb_user_estimator = FBUserEstimator.load(arguments.model_path)
     print("Loading test data from '{}' ...".format(arguments.input_path))
     features = read_prediction_data(arguments.input_path)
-    liwc_df, nrc_df = read_liwc(arguments.data_path), read_nrc(arguments.data_path)
-    oxford_df = read_oxford(arguments.data_path)
+    liwc_df, nrc_df = read_liwc(arguments.input_path), read_nrc(arguments.input_path)
+    oxford_df = read_oxford(arguments.input_path)
     print("Predicting labels for test data ...")
     predictions = fb_user_estimator.predict(
         features,
