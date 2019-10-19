@@ -10,7 +10,6 @@ from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.gbdt_gender_estimator import GBDTGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
 from estimators.personality.graph_similarity_personality_estimator import GraphSimilarityPersonalityEstimator
-from estimators.personality.xgboost_personality_estimator import XGBoostPersonalityEstimator
 from util.utils import get_random_id
 
 
