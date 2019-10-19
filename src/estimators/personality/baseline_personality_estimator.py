@@ -3,11 +3,10 @@ from typing import List
 import numpy as np
 import pandas as pd
 
+from data.personality_traits import PersonalityTraits
 from data.user_features import UserFeatures
 from data.user_labels import UserLabels
-from data.personality_traits import PersonalityTraits
 from estimators.base.personality_estimator import PersonalityEstimator
-from evaluation.evaluation_utils import regression_score
 
 
 class BaselinePersonalityEstimator(PersonalityEstimator):
