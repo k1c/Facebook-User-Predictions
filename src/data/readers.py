@@ -119,7 +119,7 @@ def read_train_data(data_path: str) -> Tuple[List[UserFeatures], List[UserLabels
     ).sort_values(  # So that custom preprocessed data can be in the same order
         by=['userid']
     )
-    likes = read_likes("/Users/adityajoshi/Facebook-User-Predictions/datasets/synthetic")
+    likes = read_likes(data_path)
     features, labels = list(), list()
 
     for _, row in profile_df.iterrows():
