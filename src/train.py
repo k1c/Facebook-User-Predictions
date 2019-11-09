@@ -5,6 +5,7 @@ from estimators.age.baseline_age_estimator import BaselineAgeEstimator
 from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
 from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
 from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
+from estimators.age.relation_deep_walk_age_estimator import RelationDeepWalkAgeEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.gbdt_gender_estimator import GBDTGenderEstimator
@@ -15,7 +16,8 @@ from util.utils import get_random_id
 
 age_estimators = {
     'baseline': BaselineAgeEstimator,
-    'relation_v1': RelationV1AgeEstimator
+    'relation_v1': RelationV1AgeEstimator,
+    'relation_deep_walk': RelationDeepWalkAgeEstimator
 }
 
 gender_estimators = {

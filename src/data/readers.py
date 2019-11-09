@@ -105,11 +105,11 @@ def read_train_data(data_path: str) -> Tuple[List[UserFeatures], List[UserLabels
     :param data_path: The path of the directory that contains the `Text`, `Profile`, `Relation` and `Image` sub-folders.
     :return:
     """
-    profile_file_path = os.path.join(
+    profile_file_path = os.path.normpath(os.path.join(
         data_path,
         PROFILE_DIR,
         PROFILE_FILE
-    )
+    ))
 
     profile_df = pd.read_csv(
         profile_file_path,
