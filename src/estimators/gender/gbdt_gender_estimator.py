@@ -8,6 +8,9 @@ from data.user_features import UserFeatures
 from data.user_labels import UserLabels
 from estimators.base.gender_estimator import GenderEstimator
 
+from imblearn.over_sampling import SMOTE
+from sklearn.utils import shuffle
+
 
 class GBDTGenderEstimator(GenderEstimator):
 
@@ -29,9 +32,11 @@ class GBDTGenderEstimator(GenderEstimator):
         if len(rows) == 0:
             return None
         elif len(rows) == 1:
-            return rows.to_frame().T
+
+            return rows.to_frame().T if isinstance(rows, pd.Series) else rows
         else:
-            return rows.iloc[0].to_frame().T
+            row = rows.iloc[0]
+            return row.to_frame().T if isinstance(row, pd.Series) else row
 
     def fit(self, features: List[UserFeatures], oxford_df: pd.DataFrame, labels: List[UserLabels]) -> None:
 
@@ -46,7 +51,10 @@ class GBDTGenderEstimator(GenderEstimator):
             axis=1
         )
         targets = self._extract_targets(oxford_df, labels)
-        self.model.fit(features.values, targets)
+        smote = SMOTE()
+        X, y = shuffle(features.values, targets)
+        X_res, y_res = smote.fit_resample(X, y)
+        self.model.fit(X_res, y_res)
 
     def predict(self, features: List[UserFeatures], oxford_df: pd.DataFrame) -> List[int]:
         predictions = list()
@@ -56,11 +64,11 @@ class GBDTGenderEstimator(GenderEstimator):
                 predictions.append(GenderEstimator.MAJORITY_CLASS)
             else:
                 predictions.append(
-                    self.model.predict(
+                    int(self.model.predict(
                         oxford_feature.drop(
                             ["userId", "faceID"],
                             axis=1
                         )
-                    )
+                    ).item())
                 )
         return predictions

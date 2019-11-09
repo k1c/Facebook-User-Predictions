@@ -45,7 +45,6 @@ class FBUserEstimator:
         age_predictions: List[str] = self.age_estimator.predict(features)
         gender_predictions: List[int] = self.gender_estimator.predict(features, oxford_df)
         personality_predictions: List[PersonalityTraits] = self.personality_estimator.predict(features, liwc_df, nrc_df)
-
         return [
             UserLabels(
                 user_id=features[idx].user_id,
