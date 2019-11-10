@@ -60,7 +60,7 @@ def pre_process_likes_v1(data_path: str) -> pd.DataFrame:
 
 def get_deep_walk_embeddings(features: List[UserFeatures]):
     input_edge_list_file = 'relations_edge_list_{}.txt'.format(get_random_id())
-    output_embeddings_file = 'relations_embeddings_1cc17cfc76914440bfaf52a30a71a4fb.txt' # 'relations_embeddings_{}.txt'.format(get_random_id())
+    output_embeddings_file = 'relations_embeddings_{}.txt'.format(get_random_id())
     create_deep_walk_edge_list_file(input_edge_list_file, features)
 
     # This library assumes it is used as a process, not a library. Create embeddings:
