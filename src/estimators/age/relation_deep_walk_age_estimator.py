@@ -14,6 +14,7 @@ from data.relation_deep_walk_dataset import RelationDeepWalkDataset
 from estimators.base.age_estimator import AgeEstimator
 from networks.nn import BasicNN
 from data.readers import age_category_to_int
+from data.readers import int_category_to_age
 from data.pre_processors import get_deep_walk_embeddings
 
 
@@ -93,4 +94,8 @@ class RelationDeepWalkAgeEstimator(AgeEstimator):
         trainer.run(train_data_loader, max_epochs=self.max_epochs)
 
     def predict(self, features: List[UserFeatures]) -> List[str]:
-        return [self.prediction for _ in range(len(features))]
+        user_features_embeddings = torch.Tensor(get_deep_walk_embeddings(features))
+        self.neural_net.eval()
+        outputs = self.neural_net.forward(user_features_embeddings)
+        probability_outputs = np.exp(outputs.detach().numpy())
+        return [int_category_to_age(np.argmax(output)) for output in probability_outputs]

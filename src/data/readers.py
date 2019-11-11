@@ -75,6 +75,7 @@ def categorize_age(age: str) -> str:
         return "50-xx"
 
 
+
 def age_category_to_int(age_category: str) -> int:
     if age_category == "xx-24":
         return 0
