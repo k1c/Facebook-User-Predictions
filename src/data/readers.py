@@ -87,12 +87,12 @@ def age_category_to_int(age_category: str) -> int:
         return 3
 
 
-def int_to_age_category(int_age_category: int) -> str:
-    if int_age_category == 0:
+def int_category_to_age(age_category: int) -> str:
+    if age_category == 0:
         return "xx-24"
-    elif int_age_category == 1:
+    elif age_category == 1:
         return "25-34"
-    elif int_age_category == 2:
+    elif age_category == 2:
         return "35-49"
     else:
         return "50-xx"

@@ -14,7 +14,7 @@ from data.fb_relation_v1_preprocessed_dataset import FBRelationV1PreprocessedDat
 from estimators.base.age_estimator import AgeEstimator
 from networks.nn import BasicNN
 from data.readers import age_category_to_int
-from data.readers import int_to_age_category
+from data.readers import int_category_to_age
 
 
 class RelationV1AgeEstimator(AgeEstimator):
@@ -96,7 +96,7 @@ class RelationV1AgeEstimator(AgeEstimator):
 
         for batch_idx, (data) in enumerate(test_data_loader):
             output = self.neural_net(data)
-            prediction = int_to_age_category(int(torch.max(output, 0).indices))
+            prediction = int_category_to_age(int(torch.max(output, 0).indices))
             self.predictions.append(prediction)
 
         return self.predictions
