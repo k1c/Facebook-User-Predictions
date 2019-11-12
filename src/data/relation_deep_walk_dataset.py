@@ -1,11 +1,11 @@
-from typing import Tuple
-import torch.tensor
+from typing import Tuple, Optional
+import torch
 import numpy as np
 from torch.utils.data.dataset import Dataset
 
 
 class RelationDeepWalkDataset(Dataset):
-    def __init__(self, features: torch.tensor, labels: torch.tensor or None):
+    def __init__(self, features: torch.Tensor, labels: Optional[torch.Tensor]):
         if labels is not None:
             assert len(features) == len(labels)
         self.features = features
