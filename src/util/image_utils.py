@@ -3,7 +3,6 @@ from PIL import Image
 import numpy as np
 
 
-
 def detecting_faces(image):
 
     path_weights = "../src/haarcascade_frontalface_default.xml"

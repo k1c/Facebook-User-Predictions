@@ -6,7 +6,7 @@ sys.path.append('src/')
 
 from util.utils import get_current_timestamp
 
-MODEL_PATH = 'models/2019-09-29_18.04.51.pkl'
+MODEL_PATH = 'models/a8227161d7cb43faa16f1d84ea373207_2019-11-11_06.18.40.pkl'
 
 
 def main(arguments: argparse.Namespace):

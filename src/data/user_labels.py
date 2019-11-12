@@ -6,7 +6,7 @@ from typing import List
 from data.personality_traits import PersonalityTraits
 
 
-class FBUserLabels:
+class UserLabels:
     def __init__(self,
                  user_id: str,
                  age: str,
@@ -17,19 +17,6 @@ class FBUserLabels:
         self.age = age
         self.gender = gender
         self.personality_traits = personality_traits
-
-    @classmethod
-    def from_data(cls,
-                  user_id: str,
-                  age: str,
-                  gender: int,
-                  personality_traits: PersonalityTraits) -> 'FBUserLabels':
-        return cls(
-            user_id=user_id,
-            age=age,
-            gender=gender,
-            personality_traits=personality_traits
-        )
 
     def save_obj(self, save_path: str) -> None:
         """
@@ -78,7 +65,7 @@ class FBUserLabels:
             f.write(xml_blob)
 
     @staticmethod
-    def save(predictions: List['FBUserLabels'], save_path: str) -> str:
+    def save(predictions: List['UserLabels'], save_path: str) -> str:
         pathlib.Path(save_path).mkdir(parents=True, exist_ok=True)
         for prediction in predictions:
             prediction.save_obj(save_path)

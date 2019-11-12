@@ -1,8 +1,9 @@
 from typing import List
 import numpy as np
+import pandas as pd
 
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 from data.personality_traits import PersonalityTraits
 from estimators.base.personality_estimator import PersonalityEstimator
 
@@ -18,6 +19,7 @@ NUM_TRAIN_EPOCHS = 1000
 LEARNING_RATE = 1e-3
 MAX_SEQ_LENGTH = 512
 
+
 class RMSELoss(nn.Module):
     def __init__(self, eps=1e-6):
         super().__init__()
@@ -27,6 +29,7 @@ class RMSELoss(nn.Module):
     def forward(self, yhat, y):
         loss = torch.sqrt(self.mse(yhat, y) + self.eps)
         return loss
+
 
 class BertRegressionPersonalityEstimator(PersonalityEstimator):
     def __init__(self):
@@ -70,8 +73,13 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
         attention_mask = zero_pad_input_ids.ne(0).float()  # everything in input not equal to 0 will get 1, else 0
         return attention_mask
 
-    def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]) -> None:
-
+    def fit(
+        self,
+        features: List[UserFeatures],
+        liwc_df: pd.DataFrame,
+        nrc_df: pd.DataFrame,
+        labels: List[UserLabels]
+    ) -> None:
         dataset = self.get_statuses_with_personality_labels(features, labels)
 
         #shuffle the dataset
@@ -85,11 +93,11 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
 
         assert len(statuses) == len(labels), "There should be an equal amount of statuses and labels (each status has one label)"
 
-        labels = torch.tensor(labels)
+        labels = torch.Tensor(labels)
 
         input_ids = list() #list of torch tensors
         for status in statuses:
-            input_ids.append(torch.tensor([self.tokenizer.encode(status, add_special_tokens=True)]))
+            input_ids.append(torch.Tensor([self.tokenizer.encode(status, add_special_tokens=True)]))
 
         num_batches = math.ceil(len(input_ids) / BATCH_SIZE)
 
@@ -132,9 +140,12 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
                           (epoch + 1, batch_idx + 1, running_loss / 2))
                     running_loss = 0.0
 
-
-    def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
-
+    def predict(
+        self,
+        features: List[UserFeatures],
+        liwc_df: pd.DataFrame,
+        nrc_df: pd.DataFrame
+    ) -> List[PersonalityTraits]:
         statuses = list()
         for feature in features:
             statuses.append(feature.statuses)
@@ -143,7 +154,7 @@ class BertRegressionPersonalityEstimator(PersonalityEstimator):
         for row in statuses:
             input_ids = list()
             for status in row:
-                input_ids.append(torch.tensor([self.tokenizer.encode(status, add_special_tokens=True)]))
+                input_ids.append(torch.Tensor([self.tokenizer.encode(status, add_special_tokens=True)]))
             user_input_ids.append(input_ids)
 
         predictions = list()

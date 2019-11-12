@@ -2,9 +2,10 @@ import os
 import pickle
 from typing import List
 import pathlib
+import pandas as pd
 
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 from data.personality_traits import PersonalityTraits
 from estimators.base.age_estimator import AgeEstimator
 from estimators.base.gender_estimator import GenderEstimator
@@ -25,19 +26,27 @@ class FBUserEstimator:
         self.gender_estimator = gender_estimator
         self.personality_estimator = personality_estimator
 
-    def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]):
+    def fit(self,
+            features: List[UserFeatures],
+            liwc_df: pd.DataFrame,
+            nrc_df: pd.DataFrame,
+            oxford_df: pd.DataFrame,
+            labels: List[UserLabels]):
+        self.personality_estimator.fit(features, liwc_df, nrc_df, labels)
         self.age_estimator.fit(features, labels)
-        self.gender_estimator.fit(features, labels)
-        self.personality_estimator.fit(features, labels)
+        self.gender_estimator.fit(features, oxford_df, labels)
 
-    def predict(self, features: List[FBUserFeatures]) -> List[FBUserLabels]:
+    def predict(self,
+                features: List[UserFeatures],
+                liwc_df: pd.DataFrame,
+                nrc_df: pd.DataFrame,
+                oxford_df: pd.DataFrame) -> List[UserLabels]:
 
         age_predictions: List[str] = self.age_estimator.predict(features)
-        gender_predictions: List[int] = self.gender_estimator.predict(features)
-        personality_predictions: List[PersonalityTraits] = self.personality_estimator.predict(features)
-
+        gender_predictions: List[int] = self.gender_estimator.predict(features, oxford_df)
+        personality_predictions: List[PersonalityTraits] = self.personality_estimator.predict(features, liwc_df, nrc_df)
         return [
-            FBUserLabels.from_data(
+            UserLabels(
                 user_id=features[idx].user_id,
                 age=age_predictions[idx],
                 gender=gender_predictions[idx],

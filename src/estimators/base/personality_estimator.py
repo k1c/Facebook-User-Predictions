@@ -1,18 +1,27 @@
 from abc import abstractmethod
 from typing import List
 
-from data.fb_user_features import FBUserFeatures
-from data.fb_user_labels import FBUserLabels
+import pandas as pd
+
 from data.personality_traits import PersonalityTraits
+from data.user_features import UserFeatures
+from data.user_labels import UserLabels
 from estimators.base.base_estimator import BaseEstimator
 
 
 class PersonalityEstimator(BaseEstimator):
 
     @abstractmethod
-    def fit(self, features: List[FBUserFeatures], labels: List[FBUserLabels]) -> None:
+    def fit(self,
+            features: List[UserFeatures],
+            liwc_df: pd.DataFrame,
+            nrc_df: pd.DataFrame,
+            labels: List[UserLabels]) -> None:
         pass
 
     @abstractmethod
-    def predict(self, features: List[FBUserFeatures]) -> List[PersonalityTraits]:
+    def predict(self,
+                features: List[UserFeatures],
+                liwc_df: pd.DataFrame,
+                nrc_df: pd.DataFrame) -> List[PersonalityTraits]:
         pass

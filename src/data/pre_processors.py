@@ -1,6 +1,12 @@
 import os.path
 import pandas as pd
+from data.user_features import UserFeatures
+from typing import List
+import subprocess
+import os
 import numpy as np
+from util.utils import get_random_id
+import itertools
 
 
 def pre_process_likes_v1(data_path: str) -> pd.DataFrame:
@@ -50,3 +56,45 @@ def pre_process_likes_v1(data_path: str) -> pd.DataFrame:
     ).fillna(0)
 
     return features
+
+
+def get_deep_walk_embeddings(features: List[UserFeatures]):
+    input_edge_list_file = 'relations_edge_list_{}.txt'.format(get_random_id())
+    output_embeddings_file = 'relations_embeddings_{}.txt'.format(get_random_id())
+    create_deep_walk_edge_list_file(input_edge_list_file, features)
+
+    # This library assumes it is used as a process, not a library. Create embeddings:
+    print("Running the DeepWalk algorithm to produce embeddings for user likes...")
+    subprocess.Popen(
+        ' '.join([
+            'deepwalk',
+            '--input {}'.format(input_edge_list_file),
+            '--output {}'.format(output_embeddings_file),
+            '--format edgelist',
+            '--workers 4'
+        ]),
+        shell=True
+    ).wait()
+
+    embeddings = np.genfromtxt(output_embeddings_file, delimiter=' ', skip_header=1)
+    embeddings_sorted = embeddings[embeddings[:, 0].argsort()]
+    os.remove(input_edge_list_file)
+    os.remove(output_embeddings_file)
+    return embeddings_sorted[:9500, 1:]
+
+
+def create_deep_walk_edge_list_file(file_name: str, features: List[UserFeatures]):
+    all_user_ids = [feature.user_id for feature in features]
+    all_likes_ids = list(itertools.chain(*[feature.likes for feature in features]))
+    all_unique_ids = all_user_ids + list(set(all_likes_ids))
+    index_dict = {
+        id_: index
+        for index, id_ in enumerate(all_unique_ids)
+    }
+    with open(file_name, 'w') as file_handler:
+        for feature in features:
+            for like_id in feature.likes:
+                file_handler.write('{} {}\n'.format(
+                    index_dict[feature.user_id],
+                    index_dict[like_id]
+                ))
