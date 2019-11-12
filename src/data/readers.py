@@ -101,7 +101,7 @@ def read_train_data(data_path: str) -> Tuple[List[UserFeatures], List[UserLabels
     """
     The main entry point to read all the data. It goes through the `Profile/Profile.csv` file, gets the `userid`,
     and collects the associated status messages, likes and image for the user and encapsulates them in the
-    `FBUserFeatures` and `FBUserLabels` objects.
+    `UserFeatures` and `UserLabels` objects.
     :param data_path: The path of the directory that contains the `Text`, `Profile`, `Relation` and `Image` sub-folders.
     :return:
     """

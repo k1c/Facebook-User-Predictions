@@ -9,8 +9,10 @@ from estimators.age.relation_deep_walk_age_estimator import RelationDeepWalkAgeE
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.gbdt_gender_estimator import GBDTGenderEstimator
+from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
 from estimators.personality.graph_similarity_personality_estimator import GraphSimilarityPersonalityEstimator
+from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
 from util.utils import get_random_id
 
 

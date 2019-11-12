@@ -4,7 +4,7 @@ import torch
 from ignite.engine import create_supervised_trainer, create_supervised_evaluator, Events
 from ignite.metrics import Accuracy, Loss
 from torch.utils.data.dataloader import DataLoader
-from torch import tensor
+from torch import Tensor
 from sklearn.model_selection import train_test_split
 import numpy as np
 
@@ -34,10 +34,10 @@ class RelationDeepWalkAgeEstimator(AgeEstimator):
             train_size=0.8,
             shuffle=True
         )
-        x_train = tensor(x_train).float()
-        x_test = tensor(x_test).float()
-        y_train = tensor(y_train).long()
-        y_test = tensor(y_test).long()
+        x_train = Tensor(x_train).float()
+        x_test = Tensor(x_test).float()
+        y_train = Tensor(y_train).long()
+        y_test = Tensor(y_test).long()
         loss_fn = torch.nn.NLLLoss()
 
         train_data_loader = DataLoader(

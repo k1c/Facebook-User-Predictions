@@ -1,11 +1,11 @@
 from typing import Tuple
-import torch.tensor
+import torch.Tensor
 import numpy as np
 from torch.utils.data.dataset import Dataset
 
 
 class FBRelationV1PreprocessedDataset(Dataset):
-    def __init__(self, features: torch.tensor, labels: torch.tensor or None):
+    def __init__(self, features: torch.Tensor, labels: torch.Tensor or None):
         if labels is not None:
             assert len(features) == len(labels)
         self.features = features

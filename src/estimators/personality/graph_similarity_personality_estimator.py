@@ -31,7 +31,7 @@ class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
         self.like_graph: DefaultDict[int, List[str]] = self._build_like_graph(train_features)
         self.user_label_graph: Dict[str, UserLabels] = self._build_user_label_graph(train_labels)
 
-        valid_predictions = self.predict(valid_features)
+        valid_predictions = self.predict(valid_features, liwc_df, nrc_df)
         scores = regression_score(predicted=valid_predictions, true=[x.personality_traits for x in valid_labels])
         print(scores)
 

@@ -1,4 +1,5 @@
-from typing import List, Dict
+from typing import List
+import pandas as pd
 
 import torch
 from ignite.engine import create_supervised_trainer, create_supervised_evaluator, Events
@@ -26,7 +27,12 @@ class CnnGenderEstimator(GenderEstimator):
         self.max_epochs = config["max_epochs"]
         self.prediction: int = None
 
-    def fit(self, features: List[UserFeatures], labels: List[UserLabels]):
+    def fit(
+        self,
+        features: List[UserFeatures],
+        oxford_df: pd.DataFrame,
+        labels: List[UserLabels]
+    ) -> None:
 
         train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
             features,
@@ -79,7 +85,11 @@ class CnnGenderEstimator(GenderEstimator):
 
         trainer.run(train_dataloader, max_epochs=self.max_epochs)
 
-    def predict(self, features: List[UserFeatures]) -> List[int]:
+    def predict(
+        self,
+        features: List[UserFeatures],
+        oxford_df: pd.DataFrame
+    ) -> List[int]:
 
         test_dataloader = DataLoader(
             dataset=ImageDataset(features, labels=None),

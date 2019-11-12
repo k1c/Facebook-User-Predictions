@@ -1,4 +1,5 @@
 import unittest
+import pandas as pd
 
 from data.readers import read_train_data
 from estimators.age.baseline_age_estimator import BaselineAgeEstimator
@@ -11,6 +12,9 @@ class TestFBUserEstimator(unittest.TestCase):
 
     def setUp(self):
         self.features, self.labels = read_train_data("../../datasets/synthetic")
+        self.liwc_df = pd.DataFrame()
+        self.nrc_df = pd.DataFrame()
+        self.oxford_df = pd.DataFrame()
 
     def test_prediction(self):
         fb_user_estimator = FBUserEstimator(
@@ -19,4 +23,10 @@ class TestFBUserEstimator(unittest.TestCase):
             gender_estimator=BaselineGenderEstimator(),
             personality_estimator=BaselinePersonalityEstimator()
         )
-        fb_user_estimator.fit(self.features, self.labels)
+        fb_user_estimator.fit(
+            self.features,
+            self.liwc_df,
+            self.nrc_df,
+            self.oxford_df,
+            self.labels
+        )
