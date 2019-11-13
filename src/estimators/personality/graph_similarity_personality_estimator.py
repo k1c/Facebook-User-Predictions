@@ -11,8 +11,8 @@ from evaluation.evaluation_utils import regression_score
 
 
 class GraphSimilarityPersonalityEstimator(PersonalityEstimator):
-    def __init__(self, num_similar_users: int, valid_split: float):
-        self.valid_split = valid_split
+    def __init__(self, num_similar_users: int):
+        self.valid_split = 0.8
         self.num_similar_users = num_similar_users
         self.like_graph: DefaultDict[int, List[str]] = None
         self.user_label_graph: Dict[str, UserLabels] = None

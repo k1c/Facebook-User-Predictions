@@ -7,6 +7,7 @@ import os
 import numpy as np
 from util.utils import get_random_id
 import itertools
+from constants.directory_names import TEMP_DIR
 
 
 def pre_process_likes_v1(data_path: str) -> pd.DataFrame:
@@ -59,8 +60,10 @@ def pre_process_likes_v1(data_path: str) -> pd.DataFrame:
 
 
 def get_deep_walk_embeddings(features: List[UserFeatures]):
-    input_edge_list_file = 'relations_edge_list_{}.txt'.format(get_random_id())
-    output_embeddings_file = 'relations_embeddings_{}.txt'.format(get_random_id())
+    input_edge_list_file = '{}/relations_edge_list_{}.txt'.format(TEMP_DIR, get_random_id())
+    output_embeddings_file = '{}/relations_embeddings_{}.txt'.format(TEMP_DIR, get_random_id())
+    if not os.path.exists(TEMP_DIR):
+        os.makedirs(TEMP_DIR)
     create_deep_walk_edge_list_file(input_edge_list_file, features)
 
     # This library assumes it is used as a process, not a library. Create embeddings:
