@@ -1,10 +1,9 @@
 from typing import List
 
-import torch
 from ignite.engine import create_supervised_trainer, create_supervised_evaluator, Events
 from ignite.metrics import Accuracy, Loss
 from torch.utils.data.dataloader import DataLoader
-from torch import Tensor
+import torch
 from sklearn.model_selection import train_test_split
 import numpy as np
 

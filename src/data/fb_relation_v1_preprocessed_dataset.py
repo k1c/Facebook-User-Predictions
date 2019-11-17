@@ -1,5 +1,5 @@
 from typing import Tuple
-import torch.Tensor
+import torch
 import numpy as np
 from torch.utils.data.dataset import Dataset
 

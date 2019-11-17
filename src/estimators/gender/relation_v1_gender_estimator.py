@@ -1,10 +1,9 @@
 from typing import List
 
-import torch
 from ignite.engine import create_supervised_trainer, create_supervised_evaluator, Events
 from ignite.metrics import Accuracy, Loss
 from torch.utils.data.dataloader import DataLoader
-from torch import Tensor
+import torch
 from sklearn.model_selection import train_test_split
 import numpy as np
 
@@ -34,10 +33,10 @@ class RelationV1GenderEstimator(AgeEstimator):
             train_size=0.8,
             shuffle=True
         )
-        x_train = Tensor(x_train).float()
-        x_test = Tensor(x_test).float()
-        y_train = Tensor(y_train).float()
-        y_test = Tensor(y_test).float()
+        x_train = torch.Tensor(x_train).float()
+        x_test = torch.Tensor(x_test).float()
+        y_train = torch.Tensor(y_train).float()
+        y_test = torch.Tensor(y_test).float()
 
         train_data_loader = DataLoader(
             dataset=FBRelationV1PreprocessedDataset(x_train, y_train),
