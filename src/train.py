@@ -47,7 +47,7 @@ def main(arguments: argparse.Namespace):
         model_id=get_random_id(),
         age_estimator=age_estimators.get(arguments.age_estimator)(),
         gender_estimator=gender_estimators.get(arguments.gender_estimator)(),
-        personality_estimator=personality_estimators.get(arguments.personality_estimator)(valid_split=0.8)
+        personality_estimator=personality_estimators.get(arguments.personality_estimator)()
     )
     liwc_df, nrc_df = read_liwc(arguments.data_path), read_nrc(arguments.data_path)
     oxford_df = read_oxford(arguments.data_path)
