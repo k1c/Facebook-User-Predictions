@@ -17,23 +17,28 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
     def __init__(self):
         self.openness_regressor = GradientBoostingRegressor(
             n_estimators=50,
-            max_depth=3
+            max_depth=3,
+            learning_rate=0.01
         )
         self.conscientiousness_regressor = GradientBoostingRegressor(
             n_estimators=50,
-            max_depth=3
+            max_depth=3,
+            learning_rate=0.01
         )
         self.extroversion_regressor = GradientBoostingRegressor(
-            n_estimators=50,
-            max_depth=3
+            n_estimators=24,
+            max_depth=3,
+            learning_rate=0.01
         )
         self.agreeableness_regressor = GradientBoostingRegressor(
-            n_estimators=50,
-            max_depth=3
+            n_estimators=24,
+            max_depth=3,
+            learning_rate=0.01
         )
         self.neuroticism_regressor = GradientBoostingRegressor(
-            n_estimators=50,
-            max_depth=3
+            n_estimators=24,
+            max_depth=3,
+            learning_rate=0.01
         )
 
 # get targets that are related to a personality trait for each user in liwc or nrc
