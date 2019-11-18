@@ -8,7 +8,6 @@ from data.personality_traits import PersonalityTraits
 from data.user_features import UserFeatures
 from data.user_labels import UserLabels
 from estimators.base.personality_estimator import PersonalityEstimator
-from evaluation.evaluation_utils import regression_score
 
 from sklearn.utils import shuffle
 
