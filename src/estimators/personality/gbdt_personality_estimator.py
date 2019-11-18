@@ -24,7 +24,7 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
             n_estimators=50,
             max_depth=3
         )
-        self.extraversion_regressor = GradientBoostingRegressor(
+        self.extroversion_regressor = GradientBoostingRegressor(
             n_estimators=50,
             max_depth=3
         )
@@ -81,10 +81,15 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
         liwc_nrc_df = self._merge_features(liwc_df, nrc_df)
         liwc_nrc_features = liwc_nrc_df.drop(["userId"], axis=1)
 
-        personalities = ["openness", "conscientiousness","extroversion", "agreeableness", "neuroticism"]
-        regressors = [self.openness_regressor, self.conscientiousness_regressor, self.extraversion_regressor, self.agreeableness_regressor, self.neuroticism_regressor]
+        personality_regressor = {
+            "openness": self.openness_regressor,
+            "conscientiousness": self.conscientiousness_regressor,
+            "extroversion": self.extroversion_regressor,
+            "agreeableness": self.agreeableness_regressor,
+            "neuroticism": self.neuroticism_regressor
+        }
 
-        for personality, regressor in zip(personalities, regressors):
+        for personality, regressor in personality_regressor.items():
             liwc_nrc_targets = self._extract_targets(liwc_nrc_df, labels, personality)
             X, y = shuffle(liwc_nrc_features.values, liwc_nrc_targets)
             regressor.fit(X, y)
@@ -103,7 +108,7 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
             liwc_nrc_feature = liwc_nrc_feature.drop(["userId"], axis=1)
             ope_predictions.append(float(self.openness_regressor.predict(liwc_nrc_feature)))
             con_predictions.append(float(self.conscientiousness_regressor.predict(liwc_nrc_feature)))
-            ext_predictions.append(float(self.extraversion_regressor.predict(liwc_nrc_feature)))
+            ext_predictions.append(float(self.extroversion_regressor.predict(liwc_nrc_feature)))
             agr_predictions.append(float(self.agreeableness_regressor.predict(liwc_nrc_feature)))
             nev_predictions.append(float(self.neuroticism_regressor.predict(liwc_nrc_feature)))
 
