@@ -57,30 +57,37 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
             row = rows.iloc[0]
             return row.to_frame().T if isinstance(row, pd.Series) else row
 
+    def _merge_features(self, liwc_df: pd.DataFrame, nrc_df: pd.DataFrame):
+
+        # remove duplicate userId and keep the first one (didn't find any duplicated for both features, but doing this in case)
+        liwc_df = liwc_df.drop_duplicates(
+            subset=["userId"],
+            keep="first"
+        )
+        nrc_df = nrc_df.drop_duplicates(
+            subset=["userId"],
+            keep="first"
+        )
+
+        liwc_nrc_df = liwc_df.merge(nrc_df, how='inner', left_on='userId', right_on='userId',validate='one_to_one')
+
+        return liwc_nrc_df
+
     def fit(self,
             features: List[UserFeatures],
             liwc_df: pd.DataFrame,
             nrc_df: pd.DataFrame,
             labels: List[UserLabels]) -> None:
 
-        # train_features, train_labels, valid_features, valid_labels = self.train_valid_split(
-        #     features,
-        #     labels,
-        #     valid_split=self.valid_split
-        # )
-        # Sometimes we have two rows with the same userId. There might be two different people of different
-        # genders in this, and this will only confuse our algorithm. So we drop duplicates.
-        # liwc_df = liwc_df.drop_duplicates(
-        #     subset=["userId"],
-        #     keep="first"
-        # )
-        liwc_features = liwc_df.drop(["userId"], axis=1)
+        liwc_nrc_df = self._merge_features(liwc_df, nrc_df)
+        liwc_nrc_features = liwc_nrc_df.drop(["userId"], axis=1)
+
         personalities = ["openness", "conscientiousness","extroversion", "agreeableness", "neuroticism"]
         regressors = [self.openness_regressor, self.conscientiousness_regressor, self.extraversion_regressor, self.agreeableness_regressor, self.neuroticism_regressor]
 
         for personality, regressor in zip(personalities, regressors):
-            liwc_targets = self._extract_targets(liwc_df, labels, personality)
-            X, y = shuffle(liwc_features.values, liwc_targets)
+            liwc_nrc_targets = self._extract_targets(liwc_nrc_df, labels, personality)
+            X, y = shuffle(liwc_nrc_features.values, liwc_nrc_targets)
             regressor.fit(X, y)
 
     def predict(self,
@@ -90,14 +97,16 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
 
         ope_predictions,con_predictions,ext_predictions,agr_predictions,nev_predictions = (list() for _ in range(5))
 
+        liwc_nrc_df = self._merge_features(liwc_df, nrc_df)
+
         for feature in features:
-            liwc_feature = self._extract_features(liwc_df, feature.user_id)
-            liwc_feature = liwc_feature.drop(["userId"], axis=1)
-            ope_predictions.append(float(self.openness_regressor.predict(liwc_feature)))
-            con_predictions.append(float(self.conscientiousness_regressor.predict(liwc_feature)))
-            ext_predictions.append(float(self.extraversion_regressor.predict(liwc_feature)))
-            agr_predictions.append(float(self.agreeableness_regressor.predict(liwc_feature)))
-            nev_predictions.append(float(self.neuroticism_regressor.predict(liwc_feature)))
+            liwc_nrc_feature = self._extract_features(liwc_nrc_df, feature.user_id) # get the features for one specific user
+            liwc_nrc_feature = liwc_nrc_feature.drop(["userId"], axis=1)
+            ope_predictions.append(float(self.openness_regressor.predict(liwc_nrc_feature)))
+            con_predictions.append(float(self.conscientiousness_regressor.predict(liwc_nrc_feature)))
+            ext_predictions.append(float(self.extraversion_regressor.predict(liwc_nrc_feature)))
+            agr_predictions.append(float(self.agreeableness_regressor.predict(liwc_nrc_feature)))
+            nev_predictions.append(float(self.neuroticism_regressor.predict(liwc_nrc_feature)))
 
         return [
             PersonalityTraits(
