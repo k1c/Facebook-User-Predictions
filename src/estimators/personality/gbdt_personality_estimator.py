@@ -16,7 +16,6 @@ from sklearn.utils import shuffle
 class GBDTPersonalityEstimator(PersonalityEstimator):
 
     def __init__(self):
-        self.valid_split = 0.8
         self.openness_regressor = GradientBoostingRegressor(
             n_estimators=50,
             max_depth=3
