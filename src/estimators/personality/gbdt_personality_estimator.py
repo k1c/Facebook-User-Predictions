@@ -105,12 +105,19 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
 
         for feature in features:
             liwc_nrc_feature = self._extract_features(liwc_nrc_df, feature.user_id) # get the features for one specific user
-            liwc_nrc_feature = liwc_nrc_feature.drop(["userId"], axis=1)
-            ope_predictions.append(float(self.openness_regressor.predict(liwc_nrc_feature)))
-            con_predictions.append(float(self.conscientiousness_regressor.predict(liwc_nrc_feature)))
-            ext_predictions.append(float(self.extroversion_regressor.predict(liwc_nrc_feature)))
-            agr_predictions.append(float(self.agreeableness_regressor.predict(liwc_nrc_feature)))
-            nev_predictions.append(float(self.neuroticism_regressor.predict(liwc_nrc_feature)))
+            if liwc_nrc_feature is None:
+                ope_predictions.append(float(PersonalityEstimator.OPENNESS_BASLINE))
+                con_predictions.append(float(PersonalityEstimator.CONSCIENTIOUS_BASELINE))
+                ext_predictions.append(float(PersonalityEstimator.EXTROVERT_BASELINE))
+                agr_predictions.append(float(PersonalityEstimator.AGREEABLE_BASELINE))
+                nev_predictions.append(float(PersonalityEstimator.NEUROTIC_BASELINE))
+            else:
+                liwc_nrc_feature = liwc_nrc_feature.drop(["userId"], axis=1)
+                ope_predictions.append(float(self.openness_regressor.predict(liwc_nrc_feature)))
+                con_predictions.append(float(self.conscientiousness_regressor.predict(liwc_nrc_feature)))
+                ext_predictions.append(float(self.extroversion_regressor.predict(liwc_nrc_feature)))
+                agr_predictions.append(float(self.agreeableness_regressor.predict(liwc_nrc_feature)))
+                nev_predictions.append(float(self.neuroticism_regressor.predict(liwc_nrc_feature)))
 
         return [
             PersonalityTraits(
