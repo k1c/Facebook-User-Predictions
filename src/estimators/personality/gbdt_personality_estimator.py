@@ -74,16 +74,13 @@ class GBDTPersonalityEstimator(PersonalityEstimator):
         #     subset=["userId"],
         #     keep="first"
         # )
-        features = liwc_df.drop(
-            ["userId"],
-            axis=1
-        )
+        liwc_features = liwc_df.drop(["userId"], axis=1)
         personalities = ["openness", "conscientiousness","extroversion", "agreeableness", "neuroticism"]
         regressors = [self.openness_regressor, self.conscientiousness_regressor, self.extraversion_regressor, self.agreeableness_regressor, self.neuroticism_regressor]
 
         for personality, regressor in zip(personalities, regressors):
             liwc_targets = self._extract_targets(liwc_df, labels, personality)
-            X, y = shuffle(features.values, liwc_targets)
+            X, y = shuffle(liwc_features.values, liwc_targets)
             regressor.fit(X, y)
 
     def predict(self,
