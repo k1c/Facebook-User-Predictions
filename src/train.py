@@ -13,6 +13,7 @@ from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
 from estimators.personality.graph_similarity_personality_estimator import GraphSimilarityPersonalityEstimator
 from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
+from estimators.personality.gbdt_personality_estimator import GBDTPersonalityEstimator
 from util.utils import get_random_id
 
 
@@ -34,7 +35,8 @@ personality_estimators = {
     'bert_regression': BertRegressionPersonalityEstimator,
     'graph_regression': GraphSimilarityPersonalityEstimator,
     'relation_v1': RelationV1PersonalityEstimator,
-    'graph': GraphSimilarityPersonalityEstimator
+    'graph': GraphSimilarityPersonalityEstimator,
+    'gbdt' : GBDTPersonalityEstimator
 }
 
 
