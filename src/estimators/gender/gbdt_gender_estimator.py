@@ -8,7 +8,7 @@ from data.user_features import UserFeatures
 from data.user_labels import UserLabels
 from estimators.base.gender_estimator import GenderEstimator
 
-from imblearn.over_sampling import SMOTE
+#from imblearn.over_sampling import SMOTE
 from sklearn.utils import shuffle
 
 
@@ -16,7 +16,7 @@ class GBDTGenderEstimator(GenderEstimator):
 
     def __init__(self):
         self.model = GradientBoostingClassifier(
-            n_estimators=50,
+            n_estimators=25,
             max_depth=3
         )
 
@@ -51,10 +51,10 @@ class GBDTGenderEstimator(GenderEstimator):
             axis=1
         )
         targets = self._extract_targets(oxford_df, labels)
-        smote = SMOTE()
+        #smote = SMOTE()
         X, y = shuffle(features.values, targets)
-        X_res, y_res = smote.fit_resample(X, y)
-        self.model.fit(X_res, y_res)
+        #X_res, y_res = smote.fit_resample(X, y)
+        self.model.fit(X, y)
 
     def predict(self, features: List[UserFeatures], oxford_df: pd.DataFrame) -> List[int]:
         predictions = list()
