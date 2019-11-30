@@ -2,6 +2,7 @@ import argparse
 
 from data.readers import read_train_data, read_liwc, read_nrc, read_oxford
 from estimators.age.baseline_age_estimator import BaselineAgeEstimator
+from estimators.age.baseline_age_estimator import GBDTAgeEstimator
 #from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
 #from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
 #from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
@@ -21,6 +22,7 @@ age_estimators = {
     'baseline': BaselineAgeEstimator,
     #'relation_v1': RelationV1AgeEstimator,
     #'relation_deep_walk': RelationDeepWalkAgeEstimator
+    'gbdt': GBDTAgeEstimator
 }
 
 gender_estimators = {
