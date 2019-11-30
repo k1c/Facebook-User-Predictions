@@ -22,7 +22,7 @@ class GBDTAgeEstimator(AgeEstimator):
 
 # get age targets for each user in liwc and nrc
     def _extract_targets(self, df: pd.DataFrame, labels: List[UserLabels]) -> np.array:
-        user_id_to_label = {label.user_id: label for label in labels}
+        user_id_to_label = {label.user_id: label.age for label in labels}
         targets = list()
         for _, row in df.iterrows():
             targets.append(user_id_to_label[row["userId"]])
