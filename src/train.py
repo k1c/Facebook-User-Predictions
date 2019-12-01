@@ -2,40 +2,40 @@ import argparse
 
 from data.readers import read_train_data, read_liwc, read_nrc, read_oxford
 from estimators.age.baseline_age_estimator import BaselineAgeEstimator
-#from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
-#from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
-#from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
-#from estimators.age.relation_deep_walk_age_estimator import RelationDeepWalkAgeEstimator
+from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
+from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
+from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
+from estimators.age.relation_deep_walk_age_estimator import RelationDeepWalkAgeEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.gbdt_gender_estimator import GBDTGenderEstimator
-#from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
+from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
-#from estimators.personality.graph_similarity_personality_estimator import GraphSimilarityPersonalityEstimator
-#from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
+from estimators.personality.graph_similarity_personality_estimator import GraphSimilarityPersonalityEstimator
+from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
 from estimators.personality.gbdt_personality_estimator import GBDTPersonalityEstimator
 from util.utils import get_random_id
 
 
 age_estimators = {
     'baseline': BaselineAgeEstimator,
-    #'relation_v1': RelationV1AgeEstimator,
-    #'relation_deep_walk': RelationDeepWalkAgeEstimator
+    'relation_v1': RelationV1AgeEstimator,
+    'relation_deep_walk': RelationDeepWalkAgeEstimator
 }
 
 gender_estimators = {
     'baseline': BaselineGenderEstimator,
-    #'cnn': CnnGenderEstimator,
-    #'relation_v1': RelationV1GenderEstimator,
+    'cnn': CnnGenderEstimator,
+    'relation_v1': RelationV1GenderEstimator,
     'gbdt': GBDTGenderEstimator
 }
 
 personality_estimators = {
     'baseline': BaselinePersonalityEstimator,
-    #'bert_regression': BertRegressionPersonalityEstimator,
-    #'graph_regression': GraphSimilarityPersonalityEstimator,
-    #'relation_v1': RelationV1PersonalityEstimator,
-    #'graph': GraphSimilarityPersonalityEstimator,
+    'bert_regression': BertRegressionPersonalityEstimator,
+    'graph_regression': GraphSimilarityPersonalityEstimator,
+    'relation_v1': RelationV1PersonalityEstimator,
+    'graph': GraphSimilarityPersonalityEstimator,
     'gbdt' : GBDTPersonalityEstimator
 }
 
