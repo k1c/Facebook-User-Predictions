@@ -80,10 +80,10 @@ class GBDTAgeEstimator(AgeEstimator):
         for feature in features:
             liwc_nrc_feature = self._extract_features(liwc_nrc_df, feature.user_id) # get the features for one specific user
             if liwc_nrc_feature is None:
-                age_predictions.append(str(AgeEstimator.AGE_BASELINE)) # predict majority count
+                age_predictions.extend(AgeEstimator.AGE_BASELINE) # predict majority class
             else:
                 liwc_nrc_feature = liwc_nrc_feature.drop(["userId"], axis=1)
-                age_predictions.append(str(self.model.predict(liwc_nrc_feature)))
+                age_predictions.extend(self.model.predict(liwc_nrc_feature))
 
         return age_predictions
 
