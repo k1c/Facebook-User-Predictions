@@ -43,6 +43,25 @@ personality_estimators = {
 def main(arguments: argparse.Namespace):
     print("\nLoading training data from '{}' ...".format(arguments.data_path))
     features, labels = read_train_data(data_path=arguments.data_path)
+    liwc_df, nrc_df = read_liwc(arguments.data_path), read_nrc(arguments.data_path)
+    oxford_df = read_oxford(arguments.data_path)
+
+    # with open('features_meow', "wb") as file_handler:
+    #     pickle.dump(features, file_handler)
+    # with open('labels_meow', "wb") as file_handler:
+    #     pickle.dump(labels, file_handler)
+    # with open('liwc_df_meow', "wb") as file_handler:
+    #     pickle.dump(liwc_df, file_handler)
+    # with open('nrc_df_meow', "wb") as file_handler:
+    #     pickle.dump(nrc_df, file_handler)
+    # with open('oxford_df_meow', "wb") as file_handler:
+    #     pickle.dump(oxford_df, file_handler)
+
+    # features = pickle.load(open('features_meow', 'rb'))
+    # labels = pickle.load(open('labels_meow', 'rb'))
+    # liwc_df = pickle.load(open('liwc_df_meow', 'rb'))
+    # nrc_df = pickle.load(open('nrc_df_meow', 'rb'))
+    # oxford_df = pickle.load(open('oxford_df_meow', 'rb'))
 
     print("Initialising estimators ...")
     fb_user_estimator = FBUserEstimator(
@@ -51,8 +70,7 @@ def main(arguments: argparse.Namespace):
         gender_estimator=gender_estimators.get(arguments.gender_estimator)(),
         personality_estimator=personality_estimators.get(arguments.personality_estimator)()
     )
-    liwc_df, nrc_df = read_liwc(arguments.data_path), read_nrc(arguments.data_path)
-    oxford_df = read_oxford(arguments.data_path)
+
     print("Fitting estimators on training data ...")
     fb_user_estimator.fit(features, liwc_df, nrc_df, oxford_df, labels)
 
