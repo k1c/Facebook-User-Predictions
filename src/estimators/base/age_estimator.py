@@ -9,6 +9,8 @@ from estimators.base.base_estimator import BaseEstimator
 
 class AgeEstimator(BaseEstimator):
 
+    AGE_BASELINE = 'xx-24'
+
     @abstractmethod
     def fit(self,
             features: List[UserFeatures],

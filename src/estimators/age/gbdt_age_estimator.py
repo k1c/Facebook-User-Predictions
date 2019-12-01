@@ -74,6 +74,16 @@ class GBDTAgeEstimator(AgeEstimator):
                 liwc_df: pd.DataFrame,
                 nrc_df: pd.DataFrame) -> List[str]:
 
+        age_predictions = list()
+        liwc_nrc_df = self._merge_features(liwc_df, nrc_df)
 
-        return
+        for feature in features:
+            liwc_nrc_feature = self._extract_features(liwc_nrc_df, feature.user_id) # get the features for one specific user
+            if liwc_nrc_feature is None:
+                age_predictions.append(str(AgeEstimator.AGE_BASELINE)) # predict majority count
+            else:
+                liwc_nrc_feature = liwc_nrc_feature.drop(["userId"], axis=1)
+                age_predictions.append(str(self.model.predict(liwc_nrc_feature)))
+
+        return age_predictions
 
