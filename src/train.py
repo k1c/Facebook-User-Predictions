@@ -20,7 +20,7 @@ from util.utils import get_random_id
 
 age_estimators = {
     'baseline': BaselineAgeEstimator,
-    'relation_v1': RelationV1AgeEstimator,
+    'relation_v1_vanilla_nn': RelationV1AgeEstimator,
     'relation_deep_walk': RelationDeepWalkAgeEstimator,
     'gbdt': GBDTAgeEstimator
 }
@@ -28,7 +28,7 @@ age_estimators = {
 gender_estimators = {
     'baseline': BaselineGenderEstimator,
     'cnn': CnnGenderEstimator,
-    'relation_v1': RelationV1GenderEstimator,
+    'relation_v1_vanilla_nn': RelationV1GenderEstimator,
     'gbdt': GBDTGenderEstimator
 }
 
@@ -36,7 +36,7 @@ personality_estimators = {
     'baseline': BaselinePersonalityEstimator,
     'bert_regression': BertRegressionPersonalityEstimator,
     'graph_regression': GraphSimilarityPersonalityEstimator,
-    'relation_v1': RelationV1PersonalityEstimator,
+    'relation_v1_vanilla_nn': RelationV1PersonalityEstimator,
     'graph': GraphSimilarityPersonalityEstimator,
     'gbdt' : GBDTPersonalityEstimator
 }

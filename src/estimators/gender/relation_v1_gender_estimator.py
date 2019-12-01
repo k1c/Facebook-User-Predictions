@@ -1,37 +1,44 @@
 from typing import List
 
 from ignite.engine import create_supervised_trainer, create_supervised_evaluator, Events
-from ignite.metrics import Accuracy, Loss
+from ignite.metrics import Loss
 from torch.utils.data.dataloader import DataLoader
 import torch
 from sklearn.model_selection import train_test_split
 import numpy as np
+import pandas as pd
 
 from data.user_features import UserFeatures
 from data.user_labels import UserLabels
 from data.fb_relation_v1_preprocessed_dataset import FBRelationV1PreprocessedDataset
-from estimators.base.age_estimator import AgeEstimator
+from estimators.base.gender_estimator import GenderEstimator
 from networks.nn import BasicNN
+from data.pre_processors import pre_process_likes_v1
 
 
-class RelationV1GenderEstimator(AgeEstimator):
+class RelationV1GenderEstimator(GenderEstimator):
     def __init__(self):
-        self.neural_net = BasicNN(2, [8, 16, 8], 2)
+        self.neural_net = BasicNN(2, 32, 2, 'classification')
         self.batch_size = 10
         self.learning_rate = 0.01
-        self.max_epochs = 100
-        self.predictions = []
+        self.max_epochs = 10
 
-    def fit(self, features: List[UserFeatures], labels: List[UserLabels]) -> None:
+    def fit(
+        self,
+        features: List[UserFeatures],
+        oxford_df: pd.DataFrame,
+        labels: List[UserLabels]
+    ) -> None:
         x_train, x_test, y_train, y_test = train_test_split(
-            np.array([feature.likes_preprocessed_v1 for feature in features]).reshape(-1, 2),
+            pre_process_likes_v1(features),
             np.array([
                 # Converting the gender to one-hot. Example: '0'  -> [1, 0]
                 np.eye(2)[np.array([int(label.gender)])].tolist()[0]
                 for label in labels
             ]),
             train_size=0.8,
-            shuffle=True
+            shuffle=True,
+            random_state=8
         )
         x_train = torch.Tensor(x_train).float()
         x_test = torch.Tensor(x_test).float()
@@ -67,33 +74,43 @@ class RelationV1GenderEstimator(AgeEstimator):
         def log_training_results(trainer):
             evaluator.run(train_data_loader)
             metrics = evaluator.state.metrics
-            print("Training Results - Epoch: {}. Avg MSE loss: {:.8f}"
-                  .format(trainer.state.epoch, metrics['MSE']))
+            print("Training set - Epoch: {}. Loss function AVG MSE loss: {:.8f}".format(
+                trainer.state.epoch,
+                metrics['MSE']
+            ))
 
         @trainer.on(Events.EPOCH_COMPLETED)
         def log_validation_results(trainer):
             evaluator.run(valid_data_loader)
             metrics = evaluator.state.metrics
 
-            print("Validation Results - Epoch {}. Avg MSE loss: {:.8f}".format(
+            print("Validation Results - Epoch {}. Loss function AVG MSE loss: {:.8f}".format(
                 trainer.state.epoch,
                 metrics['MSE']
             ))
 
         trainer.run(train_data_loader, max_epochs=self.max_epochs)
 
-    def predict(self, features: List[UserFeatures]) -> List[str]:
-        features = np.array([feature.likes_preprocessed_v1 for feature in features]).reshape(-1, 2)
+        print("Accuracy of trained model on test set: {}".format(self._get_model_accuracy(x_test, y_test)))
 
-        test_data_loader = DataLoader(
-            dataset=FBRelationV1PreprocessedDataset(features, None),
-            batch_size=self.batch_size,
-            shuffle=True
-        )
+    def _get_predictions(self, features: torch.Tensor) -> List[int]:
+        predictions = []
+        for features_vector in features:
+            output = self.neural_net(features_vector)
+            prediction = int(torch.max(np.exp(output.detach()), 0).indices)
+            predictions.append(prediction)
+        return predictions
 
-        for batch_idx, (data) in enumerate(test_data_loader):
-            output = self.neural_net(data)
-            prediction = int(torch.max(output, 0).indices)
-            self.predictions.append(prediction)
+    def _get_model_accuracy(self, features: torch.Tensor, labels: torch.Tensor) -> float:
+        predictions = self._get_predictions(features)
+        labels_int = [int(torch.max(label, 0)[1]) for label in labels]
+        num_correct_predictions = sum(a == b for a, b in zip(predictions, labels_int))
+        return num_correct_predictions / features.shape[0]
 
-        return self.predictions
+    def predict(
+        self,
+        features: List[UserFeatures],
+        oxford_df: pd.DataFrame
+    ) -> List[int]:
+        preprocessed_features = pre_process_likes_v1(features)
+        return self._get_predictions(preprocessed_features)
