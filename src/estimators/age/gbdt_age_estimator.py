@@ -19,7 +19,6 @@ class GBDTAgeEstimator(AgeEstimator):
             max_depth=3
         )
 
-
 # get age targets for each user in liwc and nrc
     def _extract_targets(self, df: pd.DataFrame, labels: List[UserLabels]) -> np.array:
         user_id_to_label = {label.user_id: label.age for label in labels}
@@ -63,9 +62,8 @@ class GBDTAgeEstimator(AgeEstimator):
 
         liwc_nrc_df = self._merge_features(liwc_df, nrc_df)
         liwc_nrc_features = liwc_nrc_df.drop(["userId"], axis=1)
-
-
         liwc_nrc_targets = self._extract_targets(liwc_nrc_df, labels)
+
         X, y = shuffle(liwc_nrc_features.values, liwc_nrc_targets)
         self.model.fit(X, y)
 
