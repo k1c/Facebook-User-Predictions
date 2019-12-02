@@ -15,8 +15,7 @@ class GBDTAgeEstimator(AgeEstimator):
 
     def __init__(self):
         self.model = GradientBoostingClassifier(
-            n_estimators=25,
-            max_depth=3
+            n_estimators=500
         )
 
 # get age targets for each user in liwc and nrc
