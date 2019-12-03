@@ -9,6 +9,8 @@ import itertools
 from collections import Counter
 from scipy import stats
 from constants.directory_names import TEMP_DIR
+import networkx as nx
+from node2vec import Node2Vec
 
 
 def pre_process_likes_v1(user_features: List[UserFeatures]) -> np.array:
@@ -44,12 +46,17 @@ def pre_process_likes_v1(user_features: List[UserFeatures]) -> np.array:
     return stats.zscore(raw_result)
 
 
-def get_deep_walk_embeddings(features: List[UserFeatures]):
-    input_edge_list_file = '{}/relations_edge_list_{}.txt'.format(TEMP_DIR, get_random_id())
-    output_embeddings_file = '{}/relations_embeddings_{}.txt'.format(TEMP_DIR, get_random_id())
+def get_deep_walk_embeddings(features: List[UserFeatures], hyper_params: str):
+    input_edge_list_file = '{}/deepwalk_relations_edge_list_{}.txt'.format(
+        TEMP_DIR, get_random_id()
+    )
+    output_embeddings_file = '{}/deepwalk_relations_embeddings_{}.txt'.format(
+        TEMP_DIR, get_random_id()
+    )
     if not os.path.exists(TEMP_DIR):
         os.makedirs(TEMP_DIR)
-    create_deep_walk_edge_list_file(input_edge_list_file, features)
+
+    create_edge_list_file(input_edge_list_file, features)
 
     # This library assumes it is used as a process, not a library. Create embeddings:
     print("Running the DeepWalk algorithm to produce embeddings for user likes...")
@@ -59,7 +66,8 @@ def get_deep_walk_embeddings(features: List[UserFeatures]):
             '--input {}'.format(input_edge_list_file),
             '--output {}'.format(output_embeddings_file),
             '--format edgelist',
-            '--workers 4'
+            '--workers 16',
+            hyper_params
         ]),
         shell=True
     ).wait()
@@ -68,10 +76,41 @@ def get_deep_walk_embeddings(features: List[UserFeatures]):
     embeddings_sorted = embeddings[embeddings[:, 0].argsort()]
     os.remove(input_edge_list_file)
     os.remove(output_embeddings_file)
-    return embeddings_sorted[:9500, 1:]
+
+    return embeddings_sorted[:len(features), 1:]
 
 
-def create_deep_walk_edge_list_file(file_name: str, features: List[UserFeatures]):
+def get_node2vec_embeddings(features: List[UserFeatures], hyper_params: dict):
+    input_edge_list_file = '{}/node2vec_relations_edge_list_{}.txt'.format(
+        TEMP_DIR, get_random_id()
+    )
+    output_embeddings_file = '{}/node2vec_relations_node2vec_embeddings_{}.txt'.format(
+        TEMP_DIR, get_random_id()
+    )
+    if not os.path.exists(TEMP_DIR):
+        os.makedirs(TEMP_DIR)
+
+    create_edge_list_file(input_edge_list_file, features)
+    graph = nx.Graph()
+    with open(input_edge_list_file, 'r') as file_handler:
+        for line in file_handler:
+            if line:
+                node1, node2 = line.split()
+                graph.add_edge(node1, node2)
+
+    node2vec = Node2Vec(graph, workers=4, temp_folder=TEMP_DIR, **hyper_params)
+    model = node2vec.fit(window=5, min_count=1, batch_words=4)
+    model.wv.save_word2vec_format(output_embeddings_file)
+
+    embeddings = np.genfromtxt(output_embeddings_file, delimiter=' ', skip_header=1)
+    embeddings_sorted = embeddings[embeddings[:, 0].argsort()]
+    os.remove(input_edge_list_file)
+    os.remove(output_embeddings_file)
+
+    return embeddings_sorted[:len(features), 1:]
+
+
+def create_edge_list_file(file_name: str, features: List[UserFeatures]):
     all_user_ids = [feature.user_id for feature in features]
     all_likes_ids = list(itertools.chain(*[feature.likes for feature in features]))
     all_unique_ids = all_user_ids + list(set(all_likes_ids))
@@ -79,6 +118,7 @@ def create_deep_walk_edge_list_file(file_name: str, features: List[UserFeatures]
         id_: index
         for index, id_ in enumerate(all_unique_ids)
     }
+
     with open(file_name, 'w') as file_handler:
         for feature in features:
             for like_id in feature.likes:

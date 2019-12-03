@@ -6,7 +6,8 @@ from estimators.age.gbdt_age_estimator import GBDTAgeEstimator
 from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
 from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
 from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
-from estimators.age.relation_deep_walk_age_estimator import RelationDeepWalkAgeEstimator
+from estimators.age.relation_deepwalk_random_forest_age_estimator import RelationDeepWalkRandomForestAgeEstimator
+from estimators.age.relation_node2vec_random_forest_age_estimator import RelationNode2VecRandomForestAgeEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.gbdt_gender_estimator import GBDTGenderEstimator
@@ -21,7 +22,8 @@ from util.utils import get_random_id
 age_estimators = {
     'baseline': BaselineAgeEstimator,
     'relation_v1_vanilla_nn': RelationV1AgeEstimator,
-    'relation_deep_walk': RelationDeepWalkAgeEstimator,
+    'relation_deep_walk_random_forest': RelationDeepWalkRandomForestAgeEstimator,
+    'relation_node2vec_random_forest': RelationNode2VecRandomForestAgeEstimator,
     'gbdt': GBDTAgeEstimator
 }
 
