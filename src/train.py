@@ -3,43 +3,43 @@ import argparse
 from data.readers import read_train_data, read_liwc, read_nrc, read_oxford
 from estimators.age.baseline_age_estimator import BaselineAgeEstimator
 from estimators.age.gbdt_age_estimator import GBDTAgeEstimator
-from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
-from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
-from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
-from estimators.age.relation_deepwalk_random_forest_age_estimator import RelationDeepWalkRandomForestAgeEstimator
-from estimators.age.relation_node2vec_random_forest_age_estimator import RelationNode2VecRandomForestAgeEstimator
+#from estimators.age.relation_v1_age_estimator import RelationV1AgeEstimator
+#from estimators.gender.relation_v1_gender_estimator import RelationV1GenderEstimator
+#from estimators.personality.relation_v1_personality_estimator import RelationV1PersonalityEstimator
+#from estimators.age.relation_deepwalk_random_forest_age_estimator import RelationDeepWalkRandomForestAgeEstimator
+#from estimators.age.relation_node2vec_random_forest_age_estimator import RelationNode2VecRandomForestAgeEstimator
 from estimators.fb_user_estimator import FBUserEstimator
 from estimators.gender.baseline_gender_estimator import BaselineGenderEstimator
 from estimators.gender.gbdt_gender_estimator import GBDTGenderEstimator
 from estimators.gender.cnn_gender_estimator import CnnGenderEstimator
 from estimators.personality.baseline_personality_estimator import BaselinePersonalityEstimator
 from estimators.personality.graph_similarity_personality_estimator import GraphSimilarityPersonalityEstimator
-from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
+#from estimators.personality.bert_regression_personality_estimator import BertRegressionPersonalityEstimator
 from estimators.personality.gbdt_personality_estimator import GBDTPersonalityEstimator
 from util.utils import get_random_id
 
 
 age_estimators = {
     'baseline': BaselineAgeEstimator,
-    'relation_v1_vanilla_nn': RelationV1AgeEstimator,
-    'relation_deep_walk_random_forest': RelationDeepWalkRandomForestAgeEstimator,
-    'relation_node2vec_random_forest': RelationNode2VecRandomForestAgeEstimator,
+    #'relation_v1_vanilla_nn': RelationV1AgeEstimator,
+    #'relation_deep_walk_random_forest': RelationDeepWalkRandomForestAgeEstimator,
+    #'relation_node2vec_random_forest': RelationNode2VecRandomForestAgeEstimator,
     'gbdt': GBDTAgeEstimator
 }
 
 gender_estimators = {
     'baseline': BaselineGenderEstimator,
     'cnn': CnnGenderEstimator,
-    'relation_v1_vanilla_nn': RelationV1GenderEstimator,
+    #'relation_v1_vanilla_nn': RelationV1GenderEstimator,
     'gbdt': GBDTGenderEstimator
 }
 
 personality_estimators = {
     'baseline': BaselinePersonalityEstimator,
-    'bert_regression': BertRegressionPersonalityEstimator,
-    'graph_regression': GraphSimilarityPersonalityEstimator,
-    'relation_v1_vanilla_nn': RelationV1PersonalityEstimator,
-    'graph': GraphSimilarityPersonalityEstimator,
+    #'bert_regression': BertRegressionPersonalityEstimator,
+    #'graph_regression': GraphSimilarityPersonalityEstimator,
+    #'relation_v1_vanilla_nn': RelationV1PersonalityEstimator,
+    #'graph': GraphSimilarityPersonalityEstimator,
     'gbdt' : GBDTPersonalityEstimator
 }
 
@@ -67,7 +67,7 @@ def main(arguments: argparse.Namespace):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, default="../new_data/Train/")
+    parser.add_argument("--data_path", type=str, default="../../new_data/Train/")
     parser.add_argument("--age_estimator", type=str, choices=age_estimators.keys(), required=True)
     parser.add_argument("--gender_estimator", type=str, choices=gender_estimators.keys(), required=True)
     parser.add_argument("--personality_estimator", choices=personality_estimators.keys(), required=True)
