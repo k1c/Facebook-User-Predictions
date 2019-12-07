@@ -67,7 +67,7 @@ def main(arguments: argparse.Namespace):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, default="../new_data/Train/")
+    parser.add_argument("--data_path", type=str, default="../../new_data/Train/")
     parser.add_argument("--age_estimator", type=str, choices=age_estimators.keys(), required=True)
     parser.add_argument("--gender_estimator", type=str, choices=gender_estimators.keys(), required=True)
     parser.add_argument("--personality_estimator", choices=personality_estimators.keys(), required=True)
