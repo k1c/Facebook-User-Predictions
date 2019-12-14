@@ -41,7 +41,7 @@ class RelationNode2VecRandomForestAgeEstimator(AgeEstimator):
             best_model_scores.append(best_model_score)
 
         best_index = int(np.argmax(best_model_scores))
-        self.best_node2vec_hyper_parameters = node2vec_hyper_params[best_index]
+        self.best_node2vec_hyper_parameters = RELATION_AGE_NODE2VEC_HYPER_PARAMS[best_index]
         self.best_model_parameters = best_model_parameters[best_index]
         print("Best test set score was {}".format(best_model_scores[best_index]))
         print("Best hyper-parameters were {}".format(self.best_node2vec_hyper_parameters))

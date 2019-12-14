@@ -6,6 +6,7 @@ from torch.utils.data.dataloader import DataLoader
 import torch
 from sklearn.model_selection import train_test_split
 import numpy as np
+import pandas as pd
 
 from data.user_features import UserFeatures
 from data.user_labels import UserLabels
@@ -24,7 +25,13 @@ class RelationV1AgeEstimator(AgeEstimator):
         self.learning_rate = 0.01
         self.max_epochs = 100
 
-    def fit(self, features: List[UserFeatures], labels: List[UserLabels]) -> None:
+    def fit(
+        self,
+        features: List[UserFeatures],
+        liwc_df: pd.DataFrame,
+        nrc_df: pd.DataFrame,
+        labels: List[UserLabels]
+    ) -> None:
         x_train, x_test, y_train, y_test = train_test_split(
             pre_process_likes_v1(features),
             np.array([
@@ -104,6 +111,11 @@ class RelationV1AgeEstimator(AgeEstimator):
         num_correct_predictions = sum(a == b for a, b in zip(predictions, labels_str))
         return num_correct_predictions / features.shape[0]
 
-    def predict(self, features: List[UserFeatures]) -> List[str]:
+    def predict(
+            self,
+            features: List[UserFeatures],
+            liwc_df: pd.DataFrame,
+            nrc_df: pd.DataFrame
+    ) -> List[str]:
         preprocessed_features = pre_process_likes_v1(features)
         return self._get_predictions(preprocessed_features)
