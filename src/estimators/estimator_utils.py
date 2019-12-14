@@ -1,6 +1,28 @@
 import copy
 import random
+
+import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+from data.readers import age_category_to_int
+
+
+def get_age_embeddings_dataset_splits(
+    features,
+    labels,
+    hyper_params,
+    node_traversal_method
+):
+    embeddings = node_traversal_method(features, hyper_params)
+    targets = np.array([age_category_to_int(label.age) for label in labels])
+    return train_test_split(
+        embeddings,
+        targets,
+        train_size=0.80,
+        shuffle=True,
+        random_state=8
+    )
 
 
 class RandomSearch:
