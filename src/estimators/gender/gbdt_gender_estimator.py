@@ -64,6 +64,8 @@ class GBDTGenderEstimator(GenderEstimator):
 
     def predict(self, features: List[UserFeatures], oxford_df: pd.DataFrame) -> List[int]:
         predictions = list()
+        oxford_df = create_face_area(oxford_df)
+        
         for feature in features:
             oxford_feature = self._extract_oxford_features(oxford_df, feature.user_id)
             if oxford_feature is None:
