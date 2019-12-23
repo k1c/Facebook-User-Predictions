@@ -1,4 +1,4 @@
-name: fb-env-new
+name: fb-env
 channels:
   - pytorch
   - conda-forge

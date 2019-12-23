@@ -1,4 +1,4 @@
 #!/bin/bash
 eval "$(conda shell.bash hook)"
-conda activate fb-env-new
+conda activate fb-env
 python ift6758.py "$@"
